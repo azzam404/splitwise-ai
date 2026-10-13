@@ -27,6 +27,7 @@ const expenseFields = {
 
 const createExpenseSchema = z.object({
   ...expenseFields,
+  createdVia: z.enum(['manual', 'ai-text', 'ai-receipt']).optional(),
   category: expenseFields.category.default('other'),
   date: expenseFields.date.optional(),
   notes: expenseFields.notes.optional(),
