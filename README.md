@@ -17,8 +17,8 @@ Smart group expense and budget manager with AI-powered expense entry. Built for 
 | Groups (create, list, join by invite code) | ✅ |
 | Expenses (equal, exact, percentage splits) | ✅ |
 | Balances, debt simplification, settle up | ✅ |
-| Budgets and dashboard | 🚧 next |
-| AI quick-add, receipt scan, insights | ⏳ |
+| Budgets, alerts and spending dashboard | ✅ |
+| AI quick-add, receipt scan, insights | 🚧 next |
 
 ## Getting started
 
