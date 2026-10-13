@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const multer = require('multer');
 const AppError = require('../utils/AppError');
 
 function notFound(req, res, next) {
@@ -18,12 +19,16 @@ function errorHandler(err, req, res, next) {
     status = 400;
     message = 'Validation failed';
     details = Object.values(err.errors).map((e) => ({ path: e.path, message: e.message }));
+  } else if (err instanceof multer.MulterError) {
+    status = err.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
+    message = err.code === 'LIMIT_FILE_SIZE' ? 'Image is too large (max 5 MB)' : 'Invalid upload';
   } else if (err.code === 11000) {
     status = 409;
     message = `${Object.keys(err.keyValue || {}).join(', ') || 'Value'} already exists`;
   }
 
-  if (status >= 500) console.error(err);
+  // Expected errors (AppError) are reported to the client; only log unexpected crashes.
+  if (status >= 500 && !(err instanceof AppError)) console.error(err);
 
   res.status(status).json({
     error: { message: status >= 500 && process.env.NODE_ENV === 'production' ? 'Internal server error' : message, details },
