@@ -6,6 +6,12 @@
   --color-brand-500: #2f6fed;
   --color-brand-600: #1f57d1;
   --color-brand-700: #1a46a8;
+
+  /* Data-viz roles: one series hue plus reserved status colours (always paired with icon + label). */
+  --color-series-1: #2a78d6;
+  --color-status-good: #0ca30c;
+  --color-status-warning: #fab219;
+  --color-status-critical: #d03b3b;
 }
 
 body {
