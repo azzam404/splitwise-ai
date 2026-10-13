@@ -16,8 +16,8 @@ Smart group expense and budget manager with AI-powered expense entry. Built for 
 | Auth (JWT httpOnly cookies, refresh + revoke) | ✅ |
 | Groups (create, list, join by invite code) | ✅ |
 | Expenses (equal, exact, percentage splits) | ✅ |
-| Balances, debt simplification, settle up | 🚧 next |
-| Budgets and dashboard | ⏳ |
+| Balances, debt simplification, settle up | ✅ |
+| Budgets and dashboard | 🚧 next |
 | AI quick-add, receipt scan, insights | ⏳ |
 
 ## Getting started
