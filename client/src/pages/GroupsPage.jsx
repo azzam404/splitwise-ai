@@ -45,7 +45,7 @@ export default function GroupsPage() {
       <h1 className="text-2xl font-bold">Your groups</h1>
       <Alert>{error}</Alert>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
           <form onSubmit={createGroup} className="space-y-3">
             <Input id="group-name" label="New group" placeholder="e.g. Goa Trip" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -67,7 +67,7 @@ export default function GroupsPage() {
       ) : groups?.length === 0 ? (
         <p className="py-8 text-center text-slate-500">No groups yet. Create one or join with an invite code.</p>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {groups?.map((g) => (
             <li key={g._id}>
               <Link to={`/groups/${g._id}`}>
