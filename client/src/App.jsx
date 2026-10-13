@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import { useAuthStore } from './store/authStore'
 import { GuestRoute, ProtectedRoute } from './components/ProtectedRoute'
@@ -6,6 +6,11 @@ import Layout from './components/Layout'
 import AuthPage from './pages/AuthPage'
 import GroupsPage from './pages/GroupsPage'
 import GroupDetailPage from './pages/GroupDetailPage'
+import { Spinner } from './components/ui'
+import BudgetsPage from './pages/BudgetsPage'
+
+// The dashboard pulls in the charting library, so it loads on demand.
+const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 
 function NotFound() {
   return (
@@ -34,11 +39,20 @@ export default function App() {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <Suspense fallback={<Spinner />}>
+                  <DashboardPage />
+                </Suspense>
+              }
+            />
+            <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/groups" element={<GroupsPage />} />
             <Route path="/groups/:id" element={<GroupDetailPage />} />
           </Route>
         </Route>
-        <Route path="/" element={<Navigate to="/groups" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
