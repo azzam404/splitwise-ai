@@ -13,8 +13,24 @@ const SPLIT_TYPES = [
 // Local calendar date as YYYY-MM-DD (toISOString would use UTC and can be off by a day).
 const today = () => new Date().toLocaleDateString('en-CA')
 
-function initialState(group, currentUser, expense) {
+function initialState(group, currentUser, expense, aiDraft) {
   const memberIds = group.members.map((m) => m.id)
+  if (aiDraft) {
+    // AI drafts use the API's shape (paise, user ids); convert to form values.
+    const d = aiDraft.draft
+    const byUser = Object.fromEntries(d.participants.map((p) => [p.user, p]))
+    return {
+      description: d.description,
+      amount: toRupeeString(d.amount),
+      category: d.category,
+      paidBy: d.paidBy,
+      date: d.date,
+      splitType: d.splitType,
+      selected: Object.fromEntries(memberIds.map((id) => [id, Boolean(byUser[id])])),
+      exact: Object.fromEntries(d.participants.filter((p) => p.amount != null).map((p) => [p.user, toRupeeString(p.amount)])),
+      percent: Object.fromEntries(d.participants.filter((p) => p.percent != null).map((p) => [p.user, String(p.percent)])),
+    }
+  }
   if (!expense) {
     return {
       description: '',
@@ -42,8 +58,39 @@ function initialState(group, currentUser, expense) {
   }
 }
 
-export default function ExpenseForm({ group, currentUser, expense, onSaved, onCancel }) {
-  const [form, setForm] = useState(() => initialState(group, currentUser, expense))
+function AiNotice({ aiDraft }) {
+  const { notes = [], items = [], source } = aiDraft
+  return (
+    <div className="space-y-1 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2 text-sm text-slate-700">
+      <p className="font-medium text-brand-700">
+        ✨ Filled in from your {source === 'receipt' ? 'receipt' : 'description'}. Please check before saving.
+      </p>
+      {notes.length > 0 && (
+        <ul className="list-disc pl-5 text-xs text-slate-600">
+          {notes.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+      )}
+      {items.length > 0 && (
+        <details className="text-xs text-slate-600">
+          <summary className="cursor-pointer">Items on the receipt ({items.length})</summary>
+          <ul className="mt-1 space-y-0.5">
+            {items.map((item, i) => (
+              <li key={i} className="flex justify-between gap-2">
+                <span className="truncate">{item.name}</span>
+                <span className="tabular-nums">{formatINR(item.amount)}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </div>
+  )
+}
+
+export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSaved, onCancel }) {
+  const [form, setForm] = useState(() => initialState(group, currentUser, expense, aiDraft))
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -92,6 +139,7 @@ export default function ExpenseForm({ group, currentUser, expense, onSaved, onCa
         ...(form.splitType === 'exact' && { amount: toPaise(form.exact[m.id] ?? '') || 0 }),
         ...(form.splitType === 'percentage' && { percent: Number(form.percent[m.id]) || 0 }),
       })),
+      ...(aiDraft && { createdVia: aiDraft.draft.createdVia }),
     }
 
     try {
@@ -110,6 +158,7 @@ export default function ExpenseForm({ group, currentUser, expense, onSaved, onCa
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {aiDraft && <AiNotice aiDraft={aiDraft} />}
       <Alert>{error}</Alert>
 
       <Input
