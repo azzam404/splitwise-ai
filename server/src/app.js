@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const groupRoutes = require('./routes/groups');
 const expenseRoutes = require('./routes/expenses');
 const balanceRoutes = require('./routes/balances');
+const { budgetRouter, dashboardRouter } = require('./routes/budgets');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -25,6 +26,8 @@ app.use('/api/groups/:id', balanceRoutes.groupBalances);
 app.use('/api/groups', groupRoutes);
 app.use('/api/expenses', expenseRoutes.expenses);
 app.use('/api/settlements', balanceRoutes.settlements);
+app.use('/api/budgets', budgetRouter);
+app.use('/api/dashboard', dashboardRouter);
 
 app.use(notFound);
 app.use(errorHandler);
