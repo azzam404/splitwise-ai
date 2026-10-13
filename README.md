@@ -18,7 +18,7 @@ Smart group expense and budget manager with AI-powered expense entry..
 | Expenses (equal, exact, percentage splits) | ✅ |
 | Balances, debt simplification, settle up | ✅ |
 | Budgets, alerts and spending dashboard | ✅ |
-| AI quick-add, receipt scan, insights | 🚧 next |
+| AI quick-add, receipt scan, insights (Claude Haiku 5.5) | ✅ |
 
 ## Getting started
 
@@ -38,6 +38,21 @@ cd client
 npm install
 npm run dev                 # http://localhost:5173
 ```
+
+## AI features
+
+The AI features use **Claude Haiku 5.5** through the Anthropic API:
+
+- **Quick add:** type "Paid 1200 for dinner with Rahul and Priya yesterday" and the expense form fills itself in.
+- **Receipt scan:** snap a bill; the total, merchant, date, category and line items are read for you.
+- **Insights:** a short, plain-English read on your month's spending and budgets.
+
+AI never saves anything by itself: it fills in the normal form and you confirm. Insights send only your
+aggregate totals (no names or descriptions), and receipt photos are not stored.
+
+To turn them on, add `ANTHROPIC_API_KEY` to `server/.env` (create a key at console.anthropic.com; API usage
+is billed separately from a Claude Pro subscription and costs a fraction of a cent per request with Haiku).
+Without a key the app shows that AI is off and everything else works normally.
 
 ## Tests
 
