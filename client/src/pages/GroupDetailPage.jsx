@@ -8,6 +8,7 @@ import ExpenseForm from '../components/ExpenseForm'
 import ExpenseList from '../components/ExpenseList'
 import BalancesPanel from '../components/BalancesPanel'
 import SettleUpForm from '../components/SettleUpForm'
+import AiQuickAdd from '../components/AiQuickAdd'
 
 const PAGE_SIZE = 20
 const TABS = [
@@ -23,7 +24,7 @@ export default function GroupDetailPage() {
   const [page, setPage] = useState({ current: 0, pages: 0 })
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
-  // null = closed, {} = new expense, {expense} = editing
+  // null = closed, {} = new expense, {expense} = editing, {aiDraft} = reviewing an AI draft
   const [editor, setEditor] = useState(null)
   // null = closed, {prefill} = settle-up form open (prefill may be null)
   const [settling, setSettling] = useState(null)
@@ -113,6 +114,8 @@ export default function GroupDetailPage() {
 
       <Alert>{error}</Alert>
 
+      <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} />
+
       <div role="tablist" className="flex gap-1 border-b border-slate-200">
         {TABS.map((t) => (
           <button
@@ -198,11 +201,12 @@ export default function GroupDetailPage() {
       )}
 
       {editor && (
-        <Modal title={editor.expense ? 'Edit expense' : 'Add expense'} onClose={closeEditor}>
+        <Modal title={editor.expense ? 'Edit expense' : editor.aiDraft ? 'Review AI expense' : 'Add expense'} onClose={closeEditor}>
           <ExpenseForm
             group={group}
             currentUser={currentUser}
             expense={editor.expense}
+            aiDraft={editor.aiDraft}
             onSaved={handleSaved}
             onCancel={closeEditor}
           />
