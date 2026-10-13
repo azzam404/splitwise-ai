@@ -6,6 +6,7 @@ import { Alert, Card, Spinner } from '../components/ui'
 import MonthPicker from '../components/MonthPicker'
 import BudgetProgress, { StatusBadge } from '../components/BudgetProgress'
 import { CategoryBars, TrendChart } from '../components/charts'
+import AiInsights from '../components/AiInsights'
 import { categoryMeta } from '../utils/categories'
 import { formatINR } from '../utils/money'
 import { monthLabel, thisMonth } from '../utils/months'
@@ -110,6 +111,8 @@ export default function DashboardPage() {
               )}
             </StatTile>
           </div>
+
+          <AiInsights key={month} month={month} />
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card>
