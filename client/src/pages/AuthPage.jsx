@@ -23,7 +23,7 @@ export default function AuthPage({ mode }) {
     try {
       if (isRegister) await register(form)
       else await login({ email: form.email, password: form.password })
-      navigate(location.state?.from?.pathname || '/groups', { replace: true })
+      navigate(location.state?.from?.pathname || '/dashboard', { replace: true })
     } catch (err) {
       const details = err.response?.data?.error?.details
       setError(details?.length ? details.map((d) => `${d.path}: ${d.message}`).join(' · ') : errorMessage(err))

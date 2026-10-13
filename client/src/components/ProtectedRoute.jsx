@@ -15,6 +15,6 @@ export function GuestRoute() {
   const { user, status } = useAuthStore()
 
   if (status !== 'ready') return <Spinner />
-  if (user) return <Navigate to="/groups" replace />
+  if (user) return <Navigate to="/dashboard" replace />
   return <Outlet />
 }
