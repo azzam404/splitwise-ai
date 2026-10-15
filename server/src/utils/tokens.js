@@ -6,8 +6,8 @@ const toMs = (ttl) => Number(ttl.slice(0, -1)) * unitMs[ttl.slice(-1)];
 
 const cookieBase = () => ({
   httpOnly: true,
-  secure: env.isProd,
-  sameSite: env.isProd ? 'none' : 'lax',
+  secure: env.isProd || env.cookieSameSite === 'none',
+  sameSite: env.cookieSameSite,
 });
 
 function signAccessToken(user) {

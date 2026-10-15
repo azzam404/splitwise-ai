@@ -12,6 +12,15 @@ const env = {
 };
 
 env.isProd = env.nodeEnv === 'production';
+// Proxy hops in front of the API (Render adds one), so req.ip is the real client for rate limiting.
+env.trustProxy = Number(process.env.TRUST_PROXY ?? (env.isProd ? 1 : 0));
+// 'lax' works when the client proxies /api on its own origin (the recommended deploy). Use 'none'
+// only if the browser calls the API on a different site directly; it then needs HTTPS.
+env.cookieSameSite = process.env.COOKIE_SAME_SITE || 'lax';
+
+if (!['lax', 'strict', 'none'].includes(env.cookieSameSite)) {
+  throw new Error('COOKIE_SAME_SITE must be lax, strict or none');
+}
 
 if (env.isProd && (env.jwtAccessSecret.startsWith('dev-') || env.jwtRefreshSecret.startsWith('dev-'))) {
   throw new Error('JWT secrets must be set in production');

@@ -13,6 +13,7 @@ const aiRoutes = require('./routes/ai');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
+app.set('trust proxy', env.trustProxy);
 
 app.use(helmet());
 app.use(cors({ origin: env.clientUrl, credentials: true }));
