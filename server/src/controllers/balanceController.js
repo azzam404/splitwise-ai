@@ -5,6 +5,7 @@ const Group = require('../models/Group');
 const AppError = require('../utils/AppError');
 const { computeBalances, pairwiseDebts, simplifyDebts } = require('../services/debtSimplifier');
 const { loadGroupForMember } = require('./groupController');
+const { logActivity } = require('../services/activityLog');
 
 const objectId = z.string().regex(/^[0-9a-f]{24}$/i, 'Invalid id');
 
@@ -64,16 +65,35 @@ async function createSettlement(req, res) {
     { path: 'from', select: userFields },
     { path: 'to', select: userFields },
   ]);
+  await logActivity({
+    group: group._id,
+    actor: req.user._id,
+    type: 'settlement.created',
+    settlement: settlement._id,
+    details: { amount: settlement.amount, fromName: settlement.from.name, toName: settlement.to.name },
+  });
   res.status(201).json({ settlement });
 }
 
 async function deleteSettlement(req, res) {
-  const settlement = await Settlement.findById(req.params.settlementId);
+  const settlement = await Settlement.findById(req.params.settlementId)
+    .populate('from', 'name')
+    .populate('to', 'name');
   if (!settlement) throw new AppError(404, 'Payment not found');
   await loadGroupForMember(settlement.group, req.user._id).catch(() => {
     throw new AppError(404, 'Payment not found');
   });
   await settlement.deleteOne();
+  await logActivity({
+    group: settlement.group,
+    actor: req.user._id,
+    type: 'settlement.deleted',
+    details: {
+      amount: settlement.amount,
+      fromName: settlement.from?.name ?? 'Former member',
+      toName: settlement.to?.name ?? 'Former member',
+    },
+  });
   res.status(204).end();
 }
 
