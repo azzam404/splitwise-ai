@@ -4,6 +4,7 @@ const Group = require('../models/Group');
 const AppError = require('../utils/AppError');
 const { SPLIT_TYPES, computeSplits } = require('../services/splitCalculator');
 const { loadGroupForMember } = require('./groupController');
+const { logActivity } = require('../services/activityLog');
 
 const { CATEGORIES } = Expense;
 const objectId = z.string().regex(/^[0-9a-f]{24}$/i, 'Invalid id');
@@ -97,6 +98,13 @@ async function createExpense(req, res) {
     createdBy: req.user._id,
   });
   await touchGroup(group._id);
+  await logActivity({
+    group: group._id,
+    actor: req.user._id,
+    type: 'expense.created',
+    expense: expense._id,
+    details: { description: expense.description, amount: expense.amount, createdVia: expense.createdVia },
+  });
   res.status(201).json({ expense: await populateExpense(Expense.findById(expense._id)) });
 }
 
@@ -119,10 +127,22 @@ async function updateExpense(req, res) {
       expense.splits.map((s) => ({ user: String(s.user), amount: s.amount, percent: s.percent ?? undefined })),
   };
   const splits = buildSplits(group, next);
+  const previousAmount = expense.amount;
 
   Object.assign(expense, fields, { splits, updatedBy: req.user._id });
   await expense.save();
   await touchGroup(group._id);
+  await logActivity({
+    group: group._id,
+    actor: req.user._id,
+    type: 'expense.updated',
+    expense: expense._id,
+    details: {
+      description: expense.description,
+      amount: expense.amount,
+      ...(previousAmount !== expense.amount && { previousAmount }),
+    },
+  });
   res.json({ expense: await populateExpense(Expense.findById(expense._id)) });
 }
 
@@ -130,6 +150,12 @@ async function deleteExpense(req, res) {
   const { expense, group } = await loadExpenseForMember(req.params.expenseId, req.user._id);
   await expense.deleteOne();
   await touchGroup(group._id);
+  await logActivity({
+    group: group._id,
+    actor: req.user._id,
+    type: 'expense.deleted',
+    details: { description: expense.description, amount: expense.amount },
+  });
   res.status(204).end();
 }
 
