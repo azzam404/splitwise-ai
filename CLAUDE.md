@@ -15,7 +15,7 @@ started 2026-10-13). Repo: https://github.com/azzam404/splitwise-ai (public, bra
 ## Commands
 
 ```bash
-cd server && npm test            # node:test suite (60 tests), in-memory MongoDB, no network
+cd server && npm test            # node:test suite (66 tests), in-memory MongoDB, no network
 cd server && npm run dev:memory  # API on :5000 with a throwaway in-memory DB (no MongoDB install needed)
 cd server && npm run dev         # API against MONGO_URI from server/.env
 cd client && npm run dev         # :5173, proxies /api -> :5000 (cookies stay same-origin)
@@ -86,8 +86,11 @@ differs, update `client/vercel.json`.
 
 Next:
 1. User creates Atlas/Render/Vercel accounts and follows DEPLOY.md (needs the user — accounts + secrets).
-2. Polish README with screenshots + architecture diagram; demo video (show AI quick-add and
-   "N payments instead of M"); short slide deck.
+2. Demo video (show AI quick-add and "4 payments instead of 10"). README polish is done (screenshots in
+   `docs/screenshots/`, mermaid architecture diagram). The pitch deck is a claude.ai Slides artifact:
+   https://claude.ai/artifact/6uLg2ZjMbH4AMQe7u99hVr (11 slides; placeholder `[deployed URL]` on the last slide).
+   Screenshot demo data: 5-person "Goa Trip" (12 expenses → 4 payments instead of 10) + "Flat 302"; the seed
+   and screenshot scripts were throwaway, kept outside the repo.
 3. Later (user's call): add an Anthropic API key and live-test the AI features.
 
 Known: `npm audit` flags `nodemon` (dev-only) — intentionally left. Debt simplification guarantees
