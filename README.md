@@ -5,6 +5,7 @@ Smart group expense and budget manager with AI-powered expense entry. Built for 
 - Split expenses with friends, roommates and trips (equal, exact or percentage splits)
 - **Debt simplification**: settle a group's debts with the minimum number of payments
 - Personal monthly budgets and a spending dashboard
+- Group activity feed: who added, changed, deleted or paid what
 - **AI Quick-Add**: describe an expense in plain English or scan a receipt
 
 **Stack:** MongoDB · Express · React (Vite + Tailwind) · Node.js · Claude API
@@ -18,7 +19,9 @@ Smart group expense and budget manager with AI-powered expense entry. Built for 
 | Expenses (equal, exact, percentage splits) | ✅ |
 | Balances, debt simplification, settle up | ✅ |
 | Budgets, alerts and spending dashboard | ✅ |
-| AI quick-add, receipt scan, insights (Claude Haiku 5.5) | ✅ |
+| Group activity feed | ✅ |
+| AI quick-add, receipt scan, insights (Claude Haiku 5.5) | ✅ built, needs an API key to switch on |
+| Deployment config (Render + Vercel + Atlas) | ✅ see [DEPLOY.md](DEPLOY.md) |
 
 ## Getting started
 
