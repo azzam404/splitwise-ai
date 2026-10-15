@@ -1,0 +1,27 @@
+# Render Blueprint for the API: New > Blueprint, then pick this repo.
+services:
+  - type: web
+    name: splitwise-ai-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGO_URI
+        sync: false # MongoDB Atlas connection string, entered in the Render dashboard
+      - key: CLIENT_URL
+        sync: false # the Vercel URL, e.g. https://splitwise-ai.vercel.app
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: TRUST_PROXY
+        value: "1"
+      - key: ANTHROPIC_API_KEY
+        sync: false # optional; leave empty and the AI features stay off
