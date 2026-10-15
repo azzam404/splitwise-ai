@@ -4,6 +4,8 @@
 
 Built with MongoDB · Express · React · Node.js · Claude API
 
+**Live demo: [splitwise-ai-mu.vercel.app](https://splitwise-ai-mu.vercel.app)** (free hosting: the first load after a quiet spell can take up to a minute while the API wakes up)
+
 ![Group balances: 12 expenses settled in 4 payments instead of 10](docs/screenshots/balances.png)
 
 ## The problem
