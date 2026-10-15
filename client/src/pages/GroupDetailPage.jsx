@@ -9,11 +9,13 @@ import ExpenseList from '../components/ExpenseList'
 import BalancesPanel from '../components/BalancesPanel'
 import SettleUpForm from '../components/SettleUpForm'
 import AiQuickAdd from '../components/AiQuickAdd'
+import ActivityFeed from '../components/ActivityFeed'
 
 const PAGE_SIZE = 20
 const TABS = [
   { value: 'expenses', label: 'Expenses' },
   { value: 'balances', label: 'Balances' },
+  { value: 'activity', label: 'Activity' },
 ]
 
 export default function GroupDetailPage() {
@@ -29,7 +31,7 @@ export default function GroupDetailPage() {
   // null = closed, {prefill} = settle-up form open (prefill may be null)
   const [settling, setSettling] = useState(null)
   const [tab, setTab] = useState('expenses')
-  // Bumped whenever expenses or payments change so balances refetch.
+  // Bumped whenever expenses or payments change so balances and activity refetch.
   const [refreshKey, setRefreshKey] = useState(0)
   const bumpBalances = () => setRefreshKey((n) => n + 1)
 
@@ -132,7 +134,9 @@ export default function GroupDetailPage() {
         ))}
       </div>
 
-      {tab === 'balances' ? (
+      {tab === 'activity' ? (
+        <ActivityFeed groupId={group._id} currentUser={currentUser} refreshKey={refreshKey} />
+      ) : tab === 'balances' ? (
         <BalancesPanel
           groupId={group._id}
           currentUser={currentUser}
