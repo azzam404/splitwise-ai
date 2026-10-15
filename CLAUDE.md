@@ -10,7 +10,7 @@ started 2026-10-13). Repo: https://github.com/azzam404/splitwise-ai (public, bra
 - `client/` React 19 + Vite + Tailwind v4 + Zustand + Recharts, **ES modules, no semicolons** (Vite template style).
 - Key services: `server/src/services/splitCalculator.js` (equal/exact/percentage splits),
   `debtSimplifier.js` (balances + max-heap debt simplification), `spending.js` (monthly maths),
-  `aiService.js` (Claude calls).
+  `aiService.js` (Claude calls), `activityLog.js` (group feed writes; failures are logged, never fail the request).
 
 ## Commands
 
@@ -53,8 +53,9 @@ cd client && npm run lint && npm run build   # oxlint must be clean; build must 
 - Tests never call the real API: `aiService.setClientForTesting(fake)`.
 - The user has **Claude Pro, which does not include API access**; the key comes from console.anthropic.com
   (separate billing). Never wire Pro/Claude Code login tokens into the app.
-- Status (2026-10-13): built and tested with a fake client only. **Not yet run against the real API**;
-  once a key is in `server/.env`, live-test varied sentences (incl. Hinglish) and real receipts, and measure cost.
+- Status (2026-10-15): built and tested with a fake client only. **No API key yet — the user has deferred
+  this to later.** Don't block on it. Once a key is in `server/.env`, live-test varied sentences
+  (incl. Hinglish) and real receipts, and measure cost.
 
 ## UI rules
 
@@ -76,15 +77,18 @@ cd client && npm run lint && npm run build   # oxlint must be clean; build must 
 ## Status & next steps
 
 Done: auth, groups, expenses (3 split types), balances + debt simplification + settle up,
-budgets + dashboard, AI quick-add / receipt scan / insights.
+budgets + dashboard, AI quick-add / receipt scan / insights, group activity feed (`Activity` model,
+snapshotted details, `GET /api/groups/:id/activity`), deploy config (`render.yaml`, `client/vercel.json`, `DEPLOY.md`).
+
+Deploy design: Vercel rewrites `/api/*` to Render so cookies are first-party → `COOKIE_SAME_SITE=lax`
+(default) and `TRUST_PROXY=1`. Render hostname is assumed to be `splitwise-ai-api.onrender.com`; if it
+differs, update `client/vercel.json`.
 
 Next:
-1. Live-test AI with a real key (see above).
-2. Deploy: client → Vercel (`VITE_API_URL`), server → Render, DB → MongoDB Atlas. Production needs
-   real JWT secrets (env.js refuses dev defaults), `CLIENT_URL` for CORS, and cross-site cookies
-   (`secure` + `sameSite: 'none'` are already set when `NODE_ENV=production`).
-3. Polish README with screenshots + architecture diagram; demo video (show AI quick-add and
+1. User creates Atlas/Render/Vercel accounts and follows DEPLOY.md (needs the user — accounts + secrets).
+2. Polish README with screenshots + architecture diagram; demo video (show AI quick-add and
    "N payments instead of M"); short slide deck.
+3. Later (user's call): add an Anthropic API key and live-test the AI features.
 
 Known: `npm audit` flags `nodemon` (dev-only) — intentionally left. Debt simplification guarantees
 ≤ N−1 payments, not the true minimum (NP-hard); say exactly that if asked.
