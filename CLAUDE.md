@@ -80,18 +80,21 @@ Done: auth, groups, expenses (3 split types), balances + debt simplification + s
 budgets + dashboard, AI quick-add / receipt scan / insights, group activity feed (`Activity` model,
 snapshotted details, `GET /api/groups/:id/activity`), deploy config (`render.yaml`, `client/vercel.json`, `DEPLOY.md`).
 
-Deploy design: Vercel rewrites `/api/*` to Render so cookies are first-party → `COOKIE_SAME_SITE=lax`
-(default) and `TRUST_PROXY=1`. Render hostname is assumed to be `splitwise-ai-api.onrender.com`; if it
-differs, update `client/vercel.json`.
+Deployed (2026-10-15): web https://splitwise-ai-mu.vercel.app (Vercel, root dir `client`), API
+https://splitwise-ai-api.onrender.com (Render blueprint), DB = Atlas cluster `splitwise-ai`, database `splitwise-ai`.
+Pushing to `main` redeploys both. Vercel rewrites `/api/*` to Render so cookies are first-party →
+`COOKIE_SAME_SITE=lax` (default) and `TRUST_PROXY=1`. Smoke-tested end to end (register → group → expense →
+balances → activity → refresh → logout, plus browser login).
+Gotcha seen: the user's PC clock was 4h off, which made Atlas TLS fail with "certificate is not yet valid"
+(surfaced only as a generic server-selection/IP-allowlist error). Check the clock before blaming the allowlist.
 
 Next:
-1. User creates Atlas/Render/Vercel accounts and follows DEPLOY.md (needs the user — accounts + secrets).
-2. Demo video (show AI quick-add and "4 payments instead of 10"). README polish is done (screenshots in
+1. Demo video (show AI quick-add and "4 payments instead of 10"). README polish is done (screenshots in
    `docs/screenshots/`, mermaid architecture diagram). The pitch deck is a claude.ai Slides artifact:
-   https://claude.ai/artifact/6uLg2ZjMbH4AMQe7u99hVr (11 slides; placeholder `[deployed URL]` on the last slide).
+   https://claude.ai/artifact/6uLg2ZjMbH4AMQe7u99hVr (11 slides).
    Screenshot demo data: 5-person "Goa Trip" (12 expenses → 4 payments instead of 10) + "Flat 302"; the seed
    and screenshot scripts were throwaway, kept outside the repo.
-3. Later (user's call): add an Anthropic API key and live-test the AI features.
+2. Later (user's call): add an Anthropic API key and live-test the AI features.
 
 Known: `npm audit` flags `nodemon` (dev-only) — intentionally left. Debt simplification guarantees
 ≤ N−1 payments, not the true minimum (NP-hard); say exactly that if asked.
