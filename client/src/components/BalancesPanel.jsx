@@ -11,13 +11,21 @@ function MemberBalances({ balances, currentUser }) {
     <ul className="space-y-3">
       {balances.map((b) => {
         const owed = b.net > 0
+        const you = b.user.id === currentUser.id
         const width = `${(Math.abs(b.net) / max) * 100}%`
         return (
           <li key={b.user.id}>
             <div className="mb-1 flex items-center justify-between text-sm">
-              <span className="font-medium">{b.user.id === currentUser.id ? 'You' : b.user.name}</span>
+              <span className="font-medium">{you ? 'You' : b.user.name}</span>
               <span className={b.net === 0 ? 'text-slate-500' : owed ? 'text-emerald-700' : 'text-orange-700'}>
-                {b.net === 0 ? 'settled' : `${owed ? 'gets back' : 'owes'} ${formatINR(Math.abs(b.net))}`}
+                {b.net === 0 ? (
+                  'settled'
+                ) : (
+                  <>
+                    {owed ? (you ? 'get back ' : 'gets back ') : you ? 'owe ' : 'owes '}
+                    <span className="font-semibold tabular-nums">{formatINR(Math.abs(b.net))}</span>
+                  </>
+                )}
               </span>
             </div>
             <div className="h-2 rounded-full bg-slate-100">
@@ -81,6 +89,8 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
   if (!data) return <Spinner />
 
   const name = (u) => (u.id === currentUser.id ? 'You' : u.name)
+  // Mid-sentence ("Karan pays you"), the current user is lower-case.
+  const object = (u) => (u.id === currentUser.id ? 'you' : u.name)
   const saved = data.pairwise.length - data.simplified.length
 
   return (
@@ -89,13 +99,13 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card>
-          <h3 className="mb-3 font-semibold">Balances</h3>
+          <h2 className="mb-3 font-semibold">Balances</h2>
           <MemberBalances balances={data.balances} currentUser={currentUser} />
         </Card>
 
         <Card>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="font-semibold">Suggested payments</h3>
+            <h2 className="font-semibold">Suggested payments</h2>
             {saved > 0 && (
               <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">
                 {data.simplified.length} instead of {data.pairwise.length} payments
@@ -111,10 +121,10 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
                   <span className="min-w-0 text-sm">
                     <span className="font-medium">{name(p.from)}</span>
                     {p.from.id === currentUser.id ? ' pay ' : ' pays '}
-                    <span className="font-medium">{name(p.to)}</span>{' '}
-                    <span className="font-semibold">{formatINR(p.amount)}</span>
+                    <span className="font-medium">{object(p.to)}</span>{' '}
+                    <span className="font-semibold tabular-nums">{formatINR(p.amount)}</span>
                   </span>
-                  <Button variant="ghost" className="shrink-0 !px-2 !py-1 text-brand-700" onClick={() => onSettle(p)}>
+                  <Button variant="ghost" className="shrink-0 !px-3 !py-2 !text-brand-700 hover:!bg-brand-50" onClick={() => onSettle(p)}>
                     Settle
                   </Button>
                 </li>
@@ -130,7 +140,7 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
       </div>
 
       <Card>
-        <h3 className="mb-3 font-semibold">Payment history</h3>
+        <h2 className="mb-3 font-semibold">Payment history</h2>
         {settlements.length === 0 ? (
           <p className="text-sm text-slate-500">No payments recorded yet.</p>
         ) : (
@@ -138,8 +148,8 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
             {settlements.map((s) => (
               <li key={s._id} className="flex items-center justify-between gap-3 py-2 text-sm">
                 <div className="min-w-0">
-                  <span className="font-medium">{name(s.from)}</span> paid <span className="font-medium">{name(s.to)}</span>{' '}
-                  <span className="font-semibold text-emerald-700">{formatINR(s.amount)}</span>
+                  <span className="font-medium">{name(s.from)}</span> paid <span className="font-medium">{object(s.to)}</span>{' '}
+                  <span className="font-semibold tabular-nums text-emerald-700">{formatINR(s.amount)}</span>
                   <div className="text-xs text-slate-500">
                     {new Date(s.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     {s.note && ` · ${s.note}`}
@@ -148,7 +158,7 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
                 <button
                   onClick={() => deleteSettlement(s)}
                   className="shrink-0 rounded-md px-3 py-2 text-xs text-red-700 hover:bg-red-50"
-                  aria-label={`Delete payment of ${formatINR(s.amount)} from ${name(s.from)} to ${name(s.to)}`}
+                  aria-label={`Delete payment of ${formatINR(s.amount)} from ${name(s.from)} to ${object(s.to)}`}
                 >
                   Delete
                 </button>

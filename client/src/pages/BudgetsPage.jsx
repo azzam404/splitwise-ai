@@ -28,9 +28,11 @@ function BudgetRow({ row, budget, onSave, onRemove }) {
   return (
     <li className="py-3">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium">
+        {/* min-w-32: when the form needs the width (a set limit adds Remove), it wraps to its own
+            line on phones instead of squeezing the label into the input. */}
+        <span className="flex min-w-32 flex-1 items-center gap-2 text-sm font-medium">
           <row.icon className="h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.75} aria-hidden="true" />
-          {row.label}
+          <span className="min-w-0">{row.label}</span>
         </span>
         <form
           className="flex items-center gap-2"

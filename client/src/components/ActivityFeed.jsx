@@ -134,7 +134,7 @@ export default function ActivityFeed({ groupId, currentUser, refreshKey }) {
 
   return (
     <Card>
-      <h3 className="mb-3 font-semibold">Activity</h3>
+      <h2 className="mb-3 font-semibold">Activity</h2>
       <Alert>{error}</Alert>
       {entries.length === 0 ? (
         <p className="text-sm text-slate-500">Nothing has happened in this group yet.</p>

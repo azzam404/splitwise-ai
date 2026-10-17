@@ -18,7 +18,7 @@ function yourShare(expense, userId) {
 
 export default function ExpenseList({ expenses, currentUser, onEdit, onDelete }) {
   if (!expenses.length) {
-    return <p className="py-8 text-center text-sm text-slate-500">No expenses yet. Add the first one!</p>
+    return <p className="py-8 text-center text-sm text-slate-500">No expenses yet. Add the first one above.</p>
   }
 
   return (
