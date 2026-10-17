@@ -11,9 +11,9 @@ function yourShare(expense, userId) {
   const mine = expense.splits.find((s) => s.user.id === userId)?.amount ?? 0
   if (expense.paidBy.id === userId) {
     const lent = expense.amount - mine
-    return lent > 0 ? { tone: 'text-emerald-600', label: 'you lent', amount: lent } : null
+    return lent > 0 ? { tone: 'text-emerald-700', label: 'you lent', amount: lent } : null
   }
-  return mine > 0 ? { tone: 'text-orange-600', label: 'you borrowed', amount: mine } : null
+  return mine > 0 ? { tone: 'text-orange-700', label: 'you borrowed', amount: mine } : null
 }
 
 export default function ExpenseList({ expenses, currentUser, onEdit, onDelete }) {
@@ -51,7 +51,7 @@ export default function ExpenseList({ expenses, currentUser, onEdit, onDelete })
                   <div className={`text-sm font-semibold ${share.tone}`}>{formatINR(share.amount)}</div>
                 </>
               ) : (
-                <div className="text-xs text-slate-400">not involved</div>
+                <div className="text-xs text-slate-500">not involved</div>
               )}
             </div>
             <div className="flex shrink-0 flex-col gap-0.5 sm:flex-row sm:gap-1 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100 sm:focus-within:opacity-100">

@@ -16,4 +16,16 @@
 
 body {
   @apply bg-slate-50 text-slate-800 antialiased;
+  caret-color: var(--color-brand-600);
+}
+
+/* Browser surfaces in the palette: placeholders meet 4.5:1 (the default 50% grey does not). */
+::placeholder {
+  color: var(--color-slate-500);
+  opacity: 1;
+}
+
+::selection {
+  background-color: var(--color-brand-100);
+  color: var(--color-slate-900);
 }

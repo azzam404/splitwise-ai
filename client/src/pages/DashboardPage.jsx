@@ -95,10 +95,10 @@ export default function DashboardPage() {
             <StatTile label={`Spent in ${monthLabel(month, 'short')}`} value={formatINR(data.totalSpent)}>
               <ChangeVsLastMonth current={data.totalSpent} previous={data.previousMonthSpent} />
             </StatTile>
-            <StatTile label="You are owed" value={formatINR(data.balances.owedToYou)} tone="text-emerald-600">
+            <StatTile label="You are owed" value={formatINR(data.balances.owedToYou)} tone="text-emerald-700">
               Across all groups
             </StatTile>
-            <StatTile label="You owe" value={formatINR(data.balances.youOwe)} tone="text-orange-600">
+            <StatTile label="You owe" value={formatINR(data.balances.youOwe)} tone="text-orange-700">
               Across all groups
             </StatTile>
             <StatTile label="Monthly budget" value={overall ? `${overall.percent}%` : '—'}>
@@ -165,7 +165,7 @@ export default function DashboardPage() {
                     <li key={group._id}>
                       <Link to={`/groups/${group._id}`} className="flex items-center justify-between rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
                         <span className="font-medium">{group.name}</span>
-                        <span className={net > 0 ? 'text-emerald-600' : 'text-orange-600'}>
+                        <span className={net > 0 ? 'text-emerald-700' : 'text-orange-700'}>
                           {net > 0 ? 'owed ' : 'you owe '}
                           {formatINR(Math.abs(net))}
                         </span>

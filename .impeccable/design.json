@@ -4,52 +4,224 @@
   "title": "Design System: SplitWise AI",
   "extensions": {
     "colorMeta": {
-      "ledger-blue": { "role": "primary", "displayName": "Ledger Blue", "canonical": "#1f57d1", "tonalRamp": ["#0e2560", "#14358a", "#1a46a8", "#1f57d1", "#2f6fed", "#7fa9f5", "#d9eaff", "#eef6ff"] },
-      "ledger-blue-deep": { "role": "primary", "displayName": "Ledger Blue Deep", "canonical": "#1a46a8" },
-      "ledger-blue-bright": { "role": "primary", "displayName": "Ledger Blue Bright", "canonical": "#2f6fed" },
-      "ledger-blue-mist": { "role": "primary", "displayName": "Ledger Blue Mist", "canonical": "#d9eaff" },
-      "ledger-blue-wash": { "role": "primary", "displayName": "Ledger Blue Wash", "canonical": "#eef6ff" },
-      "series-1": { "role": "secondary", "displayName": "Series Blue", "canonical": "#2a78d6", "tonalRamp": ["#0f2b4f", "#164075", "#1d579f", "#2a78d6", "#5893e0", "#89b2ea", "#bcd3f3", "#e6effb"] },
-      "status-good": { "role": "tertiary", "displayName": "Status Good", "canonical": "#0ca30c" },
-      "status-warning": { "role": "tertiary", "displayName": "Status Warning", "canonical": "#fab219" },
-      "status-critical": { "role": "tertiary", "displayName": "Status Critical", "canonical": "#d03b3b" },
-      "owed-green": { "role": "tertiary", "displayName": "Owed Green", "canonical": "oklch(59.6% 0.145 163.225)" },
-      "owed-green-bar": { "role": "tertiary", "displayName": "Owed Green Bar", "canonical": "oklch(69.6% 0.17 162.48)" },
-      "owes-orange": { "role": "tertiary", "displayName": "Owes Orange", "canonical": "oklch(64.6% 0.222 41.116)" },
-      "owes-orange-bar": { "role": "tertiary", "displayName": "Owes Orange Bar", "canonical": "oklch(75% 0.183 55.934)" },
-      "error-red": { "role": "tertiary", "displayName": "Error Red", "canonical": "oklch(57.7% 0.245 27.325)" },
-      "page-slate": { "role": "neutral", "displayName": "Page Slate", "canonical": "oklch(98.4% 0.003 247.858)", "tonalRamp": ["#0f172a", "#1e293b", "#334155", "#475569", "#64748b", "#cbd5e1", "#e2e8f0", "#f8fafc"] },
-      "surface-white": { "role": "neutral", "displayName": "Surface White", "canonical": "#ffffff" },
-      "track-slate": { "role": "neutral", "displayName": "Track Slate", "canonical": "oklch(96.8% 0.007 247.896)" },
-      "hairline-slate": { "role": "neutral", "displayName": "Hairline Slate", "canonical": "oklch(92.9% 0.013 255.508)" },
-      "field-border-slate": { "role": "neutral", "displayName": "Field Border Slate", "canonical": "oklch(86.9% 0.022 252.894)" },
-      "muted-slate": { "role": "neutral", "displayName": "Muted Slate", "canonical": "oklch(55.4% 0.046 257.417)" },
-      "secondary-slate": { "role": "neutral", "displayName": "Secondary Slate", "canonical": "oklch(44.6% 0.043 257.281)" },
-      "label-slate": { "role": "neutral", "displayName": "Label Slate", "canonical": "oklch(37.2% 0.044 257.287)" },
-      "ink-slate": { "role": "neutral", "displayName": "Ink Slate", "canonical": "oklch(27.9% 0.041 260.031)" }
+      "ledger-blue": {
+        "role": "primary",
+        "displayName": "Ledger Blue",
+        "canonical": "#1f57d1",
+        "tonalRamp": [
+          "#0e2560",
+          "#14358a",
+          "#1a46a8",
+          "#1f57d1",
+          "#2f6fed",
+          "#7fa9f5",
+          "#d9eaff",
+          "#eef6ff"
+        ]
+      },
+      "ledger-blue-deep": {
+        "role": "primary",
+        "displayName": "Ledger Blue Deep",
+        "canonical": "#1a46a8"
+      },
+      "ledger-blue-bright": {
+        "role": "primary",
+        "displayName": "Ledger Blue Bright",
+        "canonical": "#2f6fed"
+      },
+      "ledger-blue-mist": {
+        "role": "primary",
+        "displayName": "Ledger Blue Mist",
+        "canonical": "#d9eaff"
+      },
+      "ledger-blue-wash": {
+        "role": "primary",
+        "displayName": "Ledger Blue Wash",
+        "canonical": "#eef6ff"
+      },
+      "series-1": {
+        "role": "secondary",
+        "displayName": "Series Blue",
+        "canonical": "#2a78d6",
+        "tonalRamp": [
+          "#0f2b4f",
+          "#164075",
+          "#1d579f",
+          "#2a78d6",
+          "#5893e0",
+          "#89b2ea",
+          "#bcd3f3",
+          "#e6effb"
+        ]
+      },
+      "status-good": {
+        "role": "tertiary",
+        "displayName": "Status Good",
+        "canonical": "#0ca30c"
+      },
+      "status-warning": {
+        "role": "tertiary",
+        "displayName": "Status Warning",
+        "canonical": "#fab219"
+      },
+      "status-critical": {
+        "role": "tertiary",
+        "displayName": "Status Critical",
+        "canonical": "#d03b3b"
+      },
+      "owed-green": {
+        "role": "tertiary",
+        "displayName": "Owed Green",
+        "canonical": "oklch(50.8% 0.118 165.612)"
+      },
+      "owed-green-bar": {
+        "role": "tertiary",
+        "displayName": "Owed Green Bar",
+        "canonical": "oklch(69.6% 0.17 162.48)"
+      },
+      "owes-orange": {
+        "role": "tertiary",
+        "displayName": "Owes Orange",
+        "canonical": "oklch(55.3% 0.195 38.402)"
+      },
+      "owes-orange-bar": {
+        "role": "tertiary",
+        "displayName": "Owes Orange Bar",
+        "canonical": "oklch(75% 0.183 55.934)"
+      },
+      "error-red": {
+        "role": "tertiary",
+        "displayName": "Error Red",
+        "canonical": "oklch(57.7% 0.245 27.325)"
+      },
+      "page-slate": {
+        "role": "neutral",
+        "displayName": "Page Slate",
+        "canonical": "oklch(98.4% 0.003 247.858)",
+        "tonalRamp": [
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f8fafc"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "#ffffff"
+      },
+      "track-slate": {
+        "role": "neutral",
+        "displayName": "Track Slate",
+        "canonical": "oklch(96.8% 0.007 247.896)"
+      },
+      "hairline-slate": {
+        "role": "neutral",
+        "displayName": "Hairline Slate",
+        "canonical": "oklch(92.9% 0.013 255.508)"
+      },
+      "field-border-slate": {
+        "role": "neutral",
+        "displayName": "Field Border Slate",
+        "canonical": "oklch(86.9% 0.022 252.894)"
+      },
+      "muted-slate": {
+        "role": "neutral",
+        "displayName": "Muted Slate",
+        "canonical": "oklch(55.4% 0.046 257.417)"
+      },
+      "secondary-slate": {
+        "role": "neutral",
+        "displayName": "Secondary Slate",
+        "canonical": "oklch(44.6% 0.043 257.281)"
+      },
+      "label-slate": {
+        "role": "neutral",
+        "displayName": "Label Slate",
+        "canonical": "oklch(37.2% 0.044 257.287)"
+      },
+      "ink-slate": {
+        "role": "neutral",
+        "displayName": "Ink Slate",
+        "canonical": "oklch(27.9% 0.041 260.031)"
+      }
     },
     "typographyMeta": {
-      "headline": { "displayName": "Headline", "purpose": "One page title per screen." },
-      "title": { "displayName": "Title", "purpose": "Modal titles and the balance summary line." },
-      "section": { "displayName": "Section", "purpose": "Card headings." },
-      "body": { "displayName": "Body", "purpose": "Nearly all UI text: inputs, buttons, list rows, nav." },
-      "label": { "displayName": "Label", "purpose": "Helper text, badges, status labels, timestamps, errors." },
-      "amount": { "displayName": "Amount", "purpose": "Rupee amounts in lists and charts; tabular figures." }
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "One page title per screen."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Modal titles and the balance summary line."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Card headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Nearly all UI text: inputs, buttons, list rows, nav."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Helper text, badges, status labels, timestamps, errors."
+      },
+      "amount": {
+        "displayName": "Amount",
+        "purpose": "Rupee amounts in lists and charts; tabular figures."
+      }
     },
     "shadows": [
-      { "name": "card-rest", "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)", "purpose": "Every card, always paired with the hairline border." },
-      { "name": "tooltip", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Chart tooltips." },
-      { "name": "sheet", "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", "purpose": "Modals / bottom sheets over a slate-900/40 scrim." }
+      {
+        "name": "card-rest",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "Every card, always paired with the hairline border."
+      },
+      {
+        "name": "tooltip",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Chart tooltips."
+      },
+      {
+        "name": "sheet",
+        "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "purpose": "Modals / bottom sheets over a slate-900/40 scrim."
+      }
     ],
     "motion": [
-      { "name": "color-transition", "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Button and link colour changes; the only UI transition." },
-      { "name": "spinner", "value": "spin 1s linear infinite", "purpose": "Loading spinner. Charts render without animation." }
+      {
+        "name": "color-transition",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Button and link colour changes; the only UI transition."
+      },
+      {
+        "name": "spinner",
+        "value": "spin 1s linear infinite",
+        "purpose": "Loading spinner. Charts render without animation."
+      }
     ],
     "breakpoints": [
-      { "name": "phone-min", "value": "390px" },
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" }
+      {
+        "name": "phone-min",
+        "value": "390px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
     ]
   },
   "components": [
@@ -114,7 +286,7 @@
       "kind": "custom",
       "description": "Per-member balance: direction in words and colour, magnitude as a proportional bar.",
       "html": "<ul class=\"ds-bal\"><li><div class=\"ds-bal-row\"><span class=\"ds-bal-name\">Rahul</span><span class=\"ds-bal-owed\">gets back ₹3,150.00</span></div><div class=\"ds-bal-track\"><div class=\"ds-bal-fill ds-owed\" style=\"width:100%\"></div></div></li><li><div class=\"ds-bal-row\"><span class=\"ds-bal-name\">You</span><span class=\"ds-bal-owes\">owes ₹1,200.00</span></div><div class=\"ds-bal-track\"><div class=\"ds-bal-fill ds-owes\" style=\"width:38%\"></div></div></li></ul>",
-      "css": ".ds-bal { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-bal-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px; } .ds-bal-name { font-weight: 500; color: #1e293b; } .ds-bal-owed { color: #059669; } .ds-bal-owes { color: #ea580c; } .ds-bal-track { height: 8px; border-radius: 9999px; background: #f1f5f9; } .ds-bal-fill { height: 8px; border-radius: 9999px; } .ds-owed { background: #10b981; } .ds-owes { background: #fb923c; }"
+      "css": ".ds-bal { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-bal-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px; } .ds-bal-name { font-weight: 500; color: #1e293b; } .ds-bal-owed { color: #047857; } .ds-bal-owes { color: #c2410c; } .ds-bal-track { height: 8px; border-radius: 9999px; background: #f1f5f9; } .ds-bal-fill { height: 8px; border-radius: 9999px; } .ds-owed { background: #10b981; } .ds-owes { background: #fb923c; }"
     },
     {
       "name": "Budget Progress",
@@ -135,12 +307,41 @@
       "Mobile first. Modals become bottom sheets on phones."
     ],
     "rules": [
-      { "name": "The One Blue Rule", "body": "Ledger Blue is the only brand hue. If a new element wants a colour and isn't an action, a status or a direction of money, it stays slate.", "section": "colors" },
-      { "name": "The Two Semantics Rule", "body": "Budget status (green / amber / red) and money direction (green / orange) are separate vocabularies. Owing money is not an error, so balances never use the critical red.", "section": "colors" },
-      { "name": "The Never Colour Alone Rule", "body": "A status colour always comes with an icon (✓, !, ✕) and a text label (\"On track\", \"Close to limit\", \"Over budget\"). Money direction always comes with words (\"gets back\", \"owes\").", "section": "colors" },
-      { "name": "The Numbers Lead Rule", "body": "In a row, the amount is the heaviest text. Names are 500, amounts 600, and surrounding words regular.", "section": "typography" },
-      { "name": "The Tabular Money Rule", "body": "Any amount that sits in a column or might be compared uses tabular-nums. Amounts are always formatted by formatINR, never by hand.", "section": "typography" },
-      { "name": "The Float-Only-When-Floating Rule", "body": "Only overlays get more than the card-rest shadow. Hover never lifts a card. Hover changes the fill colour instead.", "section": "elevation" }
+      {
+        "name": "The One Blue Rule",
+        "body": "Ledger Blue is the only brand hue. If a new element wants a colour and isn't an action, a status or a direction of money, it stays slate.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Semantics Rule",
+        "body": "Budget status (green / amber / red) and money direction (green / orange) are separate vocabularies. Owing money is not an error, so balances never use the critical red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Never Colour Alone Rule",
+        "body": "A status colour always comes with an icon (✓, !, ✕) and a text label (\"On track\", \"Close to limit\", \"Over budget\"). Money direction always comes with words (\"gets back\", \"owes\").",
+        "section": "colors"
+      },
+      {
+        "name": "The Text Shade Rule",
+        "body": "Semantic colour on text is always the 700 shade (owed-green, owes-orange, emerald/amber/red-700). The brighter bar shades fail 4.5:1 as text and live only in bars and dots. Muted text never goes lighter than Muted Slate; placeholders use it too.",
+        "section": "colors"
+      },
+      {
+        "name": "The Numbers Lead Rule",
+        "body": "In a row, the amount is the heaviest text. Names are 500, amounts 600, and surrounding words regular.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Money Rule",
+        "body": "Any amount that sits in a column or might be compared uses tabular-nums. Amounts are always formatted by formatINR, never by hand.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Only-When-Floating Rule",
+        "body": "Only overlays get more than the card-rest shadow. Hover never lifts a card. Hover changes the fill colour instead.",
+        "section": "elevation"
+      }
     ],
     "dos": [
       "Do use Ledger Blue for actions and the active state only. Charts use Series Blue.",

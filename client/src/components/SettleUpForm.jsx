@@ -53,7 +53,7 @@ export default function SettleUpForm({ group, currentUser, prefill, onSaved, onC
             ))}
           </select>
         </label>
-        <span className="pb-2 text-slate-400" aria-hidden="true">
+        <span className="pb-2 text-slate-500" aria-hidden="true">
           →
         </span>
         <label className="block">

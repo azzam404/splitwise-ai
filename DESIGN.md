@@ -11,9 +11,9 @@ colors:
   status-good: "#0ca30c"
   status-warning: "#fab219"
   status-critical: "#d03b3b"
-  owed-green: "#059669"
+  owed-green: "#047857"
   owed-green-bar: "#10b981"
-  owes-orange: "#ea580c"
+  owes-orange: "#c2410c"
   owes-orange-bar: "#fb923c"
   error-red: "#dc2626"
   page-slate: "#f8fafc"
@@ -195,6 +195,10 @@ action, a status or a direction of money, it stays slate.
 
 **The Two Semantics Rule.** Budget status (green / amber / red) and money direction (green / orange) are separate
 vocabularies. Owing money is not an error, so balances never use the critical red.
+
+**The Text Shade Rule.** Semantic colour on text is always the 700 shade (owed-green, owes-orange,
+emerald/amber/red-700). The brighter bar shades fail 4.5:1 as text and live only in bars and dots. Muted text never
+goes lighter than Muted Slate; placeholders use it too.
 
 **The Never Colour Alone Rule.** A status colour always comes with an icon (✓, !, ✕) and a text label ("On track",
 "Close to limit", "Over budget"). Money direction always comes with words ("gets back", "owes").

@@ -41,7 +41,7 @@ function BudgetRow({ row, budget, onSave, onRemove }) {
             {row.label} limit in rupees
           </label>
           <div className="relative">
-            <span className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 text-sm text-slate-400">₹</span>
+            <span className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 text-sm text-slate-500">₹</span>
             <input
               id={`limit-${row.value}`}
               inputMode="decimal"

@@ -14,7 +14,7 @@ function MemberBalances({ balances, currentUser }) {
           <li key={b.user.id}>
             <div className="mb-1 flex items-center justify-between text-sm">
               <span className="font-medium">{b.user.id === currentUser.id ? 'You' : b.user.name}</span>
-              <span className={b.net === 0 ? 'text-slate-400' : owed ? 'text-emerald-600' : 'text-orange-600'}>
+              <span className={b.net === 0 ? 'text-slate-500' : owed ? 'text-emerald-700' : 'text-orange-700'}>
                 {b.net === 0 ? 'settled' : `${owed ? 'gets back' : 'owes'} ${formatINR(Math.abs(b.net))}`}
               </span>
             </div>
@@ -128,7 +128,7 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
               <li key={s._id} className="flex items-center justify-between gap-3 py-2 text-sm">
                 <div className="min-w-0">
                   <span className="font-medium">{name(s.from)}</span> paid <span className="font-medium">{name(s.to)}</span>{' '}
-                  <span className="font-semibold text-emerald-600">{formatINR(s.amount)}</span>
+                  <span className="font-semibold text-emerald-700">{formatINR(s.amount)}</span>
                   <div className="text-xs text-slate-500">
                     {new Date(s.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     {s.note && ` · ${s.note}`}
