@@ -63,6 +63,9 @@ cd client && npm run lint && npm run build   # oxlint must be clean; build must 
 - Status colours (`--color-status-good/warning/critical`) always come with an icon + text label.
 - Must fit a 390px phone with no horizontal scroll (use `grid-cols-1` on mobile grids — implicit
   grid columns grow to content width).
+- `PRODUCT.md` (audience, voice) and `DESIGN.md` (+ `.impeccable/design.json`) are the design authority; keep them
+  in sync when UI conventions change. Icons are `lucide-react` only, never emoji or Unicode glyphs. Semantic text
+  colours use the 700 shade. Deletes hide at once with an Undo toast (`utils/useUndoableDelete.js`), no `confirm()`.
 - Verify UI changes in a real browser before calling them done (headless Chrome via puppeteer-core
   from a temp folder outside the repo; seed data through the API with curl).
 
@@ -79,6 +82,10 @@ cd client && npm run lint && npm run build   # oxlint must be clean; build must 
 Done: auth, groups, expenses (3 split types), balances + debt simplification + settle up,
 budgets + dashboard, AI quick-add / receipt scan / insights, group activity feed (`Activity` model,
 snapshotted details, `GET /api/groups/:id/activity`), deploy config (`render.yaml`, `client/vercel.json`, `DEPLOY.md`).
+Design pass (2026-10-18, Impeccable critique → layout/distill/clarify/colorize/quieter/harden/polish): group page leads
+with a settle-up summary (`?tab=` in the URL), AI composer is the single add-expense entry, AI review echoes what the
+model read, AA contrast, lucide icons, safer settle-up defaults + preview, undoable deletes. Still open from the
+critique (P2): ARIA tab pattern and modal focus trap (`/impeccable audit`).
 
 Deployed (2026-10-15): web https://splitwise-ai-mu.vercel.app (Vercel, root dir `client`), API
 https://splitwise-ai-api.onrender.com (Render blueprint), DB = Atlas cluster `splitwise-ai`, database `splitwise-ai`.
