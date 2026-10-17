@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import api, { errorMessage } from '../api/client'
 import { useAuthStore } from '../store/authStore'
 import { Alert, Button, Card, Spinner } from '../components/ui'
@@ -10,6 +10,7 @@ import BalancesPanel from '../components/BalancesPanel'
 import SettleUpForm from '../components/SettleUpForm'
 import AiQuickAdd from '../components/AiQuickAdd'
 import ActivityFeed from '../components/ActivityFeed'
+import GroupSummary from '../components/GroupSummary'
 
 const PAGE_SIZE = 20
 const TABS = [
@@ -30,7 +31,10 @@ export default function GroupDetailPage() {
   const [editor, setEditor] = useState(null)
   // null = closed, {prefill} = settle-up form open (prefill may be null)
   const [settling, setSettling] = useState(null)
-  const [tab, setTab] = useState('expenses')
+  // The active tab lives in the URL (?tab=balances) so a link can open straight onto it.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tab = TABS.some((t) => t.value === searchParams.get('tab')) ? searchParams.get('tab') : 'expenses'
+  const setTab = (value) => setSearchParams(value === 'expenses' ? {} : { tab: value }, { replace: true })
   // Bumped whenever expenses or payments change so balances and activity refetch.
   const [refreshKey, setRefreshKey] = useState(0)
   const bumpBalances = () => setRefreshKey((n) => n + 1)
@@ -116,7 +120,12 @@ export default function GroupDetailPage() {
 
       <Alert>{error}</Alert>
 
-      <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} />
+      <GroupSummary
+        groupId={group._id}
+        currentUser={currentUser}
+        refreshKey={refreshKey}
+        onShowPayments={tab === 'balances' ? null : () => setTab('balances')}
+      />
 
       <div role="tablist" className="flex gap-1 border-b border-slate-200">
         {TABS.map((t) => (
@@ -142,52 +151,56 @@ export default function GroupDetailPage() {
           currentUser={currentUser}
           refreshKey={refreshKey}
           onSettle={(prefill) => setSettling({ prefill })}
+          onChange={bumpBalances}
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Card className="md:col-span-2">
-            <h2 className="mb-2 font-semibold">Expenses</h2>
-            <ExpenseList
-              expenses={expenses}
-              currentUser={currentUser}
-              onEdit={(expense) => setEditor({ expense })}
-              onDelete={handleDelete}
-            />
-            {page.current < page.pages && (
-              <div className="pt-3 text-center">
-                <Button variant="secondary" onClick={() => loadExpenses(page.current + 1).catch((err) => setError(errorMessage(err)))}>
-                  Load more
-                </Button>
-              </div>
-            )}
-          </Card>
-  
-          <div className="space-y-4">
-            <Card>
-              <h2 className="mb-2 font-semibold">Invite friends</h2>
-              <div className="flex items-center justify-between gap-2 rounded-lg bg-slate-100 px-3 py-2">
-                <code className="font-mono text-lg tracking-widest">{group.inviteCode}</code>
-                <Button variant="secondary" onClick={copyCode}>
-                  {copied ? 'Copied!' : 'Copy'}
-                </Button>
-              </div>
+        <div className="space-y-4">
+          <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <Card className="md:col-span-2">
+              <h2 className="mb-2 font-semibold">Expenses</h2>
+              <ExpenseList
+                expenses={expenses}
+                currentUser={currentUser}
+                onEdit={(expense) => setEditor({ expense })}
+                onDelete={handleDelete}
+              />
+              {page.current < page.pages && (
+                <div className="pt-3 text-center">
+                  <Button variant="secondary" onClick={() => loadExpenses(page.current + 1).catch((err) => setError(errorMessage(err)))}>
+                    Load more
+                  </Button>
+                </div>
+              )}
             </Card>
-            <Card>
-              <h2 className="mb-2 font-semibold">Members ({group.members.length})</h2>
-              <ul className="space-y-2">
-                {group.members.map((m) => (
-                  <li key={m.id} className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
-                      {m.name[0]?.toUpperCase()}
-                    </span>
-                    <div className="text-sm">
-                      <div className="font-medium">{m.name}</div>
-                      <div className="text-slate-500">{m.email}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+
+            <div className="space-y-4">
+              <Card>
+                <h2 className="mb-2 font-semibold">Invite friends</h2>
+                <div className="flex items-center justify-between gap-2 rounded-lg bg-slate-100 px-3 py-2">
+                  <code className="font-mono text-lg tracking-widest">{group.inviteCode}</code>
+                  <Button variant="secondary" onClick={copyCode}>
+                    {copied ? 'Copied!' : 'Copy'}
+                  </Button>
+                </div>
+              </Card>
+              <Card>
+                <h2 className="mb-2 font-semibold">Members ({group.members.length})</h2>
+                <ul className="space-y-2">
+                  {group.members.map((m) => (
+                    <li key={m.id} className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
+                        {m.name[0]?.toUpperCase()}
+                      </span>
+                      <div className="text-sm">
+                        <div className="font-medium">{m.name}</div>
+                        <div className="text-slate-500">{m.email}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </div>
           </div>
         </div>
       )}

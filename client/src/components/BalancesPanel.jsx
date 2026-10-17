@@ -3,20 +3,6 @@ import api, { errorMessage } from '../api/client'
 import { formatINR } from '../utils/money'
 import { Alert, Button, Card, Spinner } from './ui'
 
-function YourSummary({ net }) {
-  if (net === 0) {
-    return <p className="text-lg font-semibold text-slate-700">You're all settled up 🎉</p>
-  }
-  const owed = net > 0
-  return (
-    <p className="text-lg">
-      {owed ? 'You are owed ' : 'You owe '}
-      <span className={`font-bold ${owed ? 'text-emerald-600' : 'text-orange-600'}`}>{formatINR(Math.abs(net))}</span>
-      {' in total'}
-    </p>
-  )
-}
-
 function MemberBalances({ balances, currentUser }) {
   const max = Math.max(1, ...balances.map((b) => Math.abs(b.net)))
   return (
@@ -42,11 +28,10 @@ function MemberBalances({ balances, currentUser }) {
   )
 }
 
-export default function BalancesPanel({ groupId, currentUser, refreshKey, onSettle }) {
+export default function BalancesPanel({ groupId, currentUser, refreshKey, onSettle, onChange }) {
   const [data, setData] = useState(null)
   const [settlements, setSettlements] = useState([])
   const [error, setError] = useState('')
-  const [reload, setReload] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -68,13 +53,14 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
     return () => {
       cancelled = true
     }
-  }, [groupId, refreshKey, reload])
+  }, [groupId, refreshKey])
 
   async function deleteSettlement(s) {
     if (!window.confirm('Delete this payment? Balances will be recalculated.')) return
     try {
       await api.delete(`/settlements/${s._id}`)
-      setReload((n) => n + 1)
+      // The page bumps refreshKey, so this panel and the summary above the tabs both reload.
+      onChange()
     } catch (err) {
       setError(errorMessage(err))
     }
@@ -83,22 +69,12 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
   if (error && !data) return <Alert>{error}</Alert>
   if (!data) return <Spinner />
 
-  const mine = data.balances.find((b) => b.user.id === currentUser.id)
   const name = (u) => (u.id === currentUser.id ? 'You' : u.name)
   const saved = data.pairwise.length - data.simplified.length
 
   return (
     <div className="space-y-4">
       <Alert>{error}</Alert>
-      <Card className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <YourSummary net={mine?.net ?? 0} />
-          <p className="text-sm text-slate-500">Group spending so far: {formatINR(data.totalSpent)}</p>
-        </div>
-        <Button variant="secondary" onClick={() => onSettle(null)}>
-          Record a payment
-        </Button>
-      </Card>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card>
