@@ -282,6 +282,8 @@ Quick and confident: one filled button per view, everything else quieter.
 - **Focus:** the border turns Ledger Blue Bright, with a 2px Ledger Blue Mist ring. The browser outline is
   removed in favour of this ring.
 - **Error:** a 12px Error Red message under the field.
+- **To check (AI-filled):** Ledger Blue Wash fill with a half-strength Ledger Blue Bright border, on any field an
+  AI draft filled in. It clears as soon as the user edits that field. Never used for anything but "please check this".
 
 ### Cards / Containers
 - **Corner Style:** 12px.

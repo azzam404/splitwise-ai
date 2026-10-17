@@ -39,7 +39,8 @@ export default function AiQuickAdd({ group, onDraft, onManual }) {
     try {
       const { data } = await api.post(`/groups/${group._id}/ai/parse-expense`, { text, today: today() })
       setText('')
-      onDraft({ ...data, source: 'text' })
+      // The review screen echoes the original sentence next to what the AI read from it.
+      onDraft({ ...data, source: 'text', input: text.trim() })
     } catch (err) {
       setError(errorMessage(err))
     } finally {

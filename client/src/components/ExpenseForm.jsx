@@ -58,13 +58,37 @@ function initialState(group, currentUser, expense, aiDraft) {
   }
 }
 
-function AiNotice({ aiDraft }) {
-  const { notes = [], items = [], source } = aiDraft
+// Fields the AI filled in; each loses its highlight once the user edits it.
+const AI_FIELDS = ['description', 'amount', 'date', 'paidBy', 'category', 'split']
+const SPLIT_FIELDS = ['splitType', 'selected', 'exact', 'percent']
+
+// One line restating what the AI understood, built from the draft itself (not the live form),
+// so the user can compare it with what they wrote.
+function readingOf(draft, group, currentUser) {
+  // Lower-case "you": this is a sentence, not a list label.
+  const name = (id) => (id === currentUser.id ? 'you' : group.members.find((m) => m.id === id)?.name ?? 'Unknown')
+  const people = draft.participants.map((p) => name(p.user)).join(', ')
+  const split = draft.splitType === 'equal' ? `split equally between ${people}` : `split by ${draft.splitType === 'exact' ? 'amount' : 'percentage'} between ${people}`
+  const date = new Date(`${draft.date}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+  const category = CATEGORIES.find((c) => c.value === draft.category)?.label ?? draft.category
+  return `${formatINR(draft.amount)} paid by ${name(draft.paidBy)}, ${split} · ${date} · ${category}`
+}
+
+function AiNotice({ aiDraft, group, currentUser }) {
+  const { notes = [], items = [], source, input } = aiDraft
   return (
-    <div className="space-y-1 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2 text-sm text-slate-700">
-      <p className="font-medium text-brand-700">
-        ✨ Filled in from your {source === 'receipt' ? 'receipt' : 'description'}. Please check before saving.
-      </p>
+    <div className="space-y-2 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2.5 text-sm text-slate-700">
+      <dl className="space-y-1">
+        <div>
+          <dt className="text-xs font-medium text-slate-600">{source === 'receipt' ? 'From' : 'You wrote'}</dt>
+          <dd className="text-slate-800">{source === 'receipt' ? 'Your receipt photo' : `“${input}”`}</dd>
+        </div>
+        <div>
+          <dt className="text-xs font-medium text-slate-600">AI read it as</dt>
+          <dd className="font-medium text-slate-900">{readingOf(aiDraft.draft, group, currentUser)}</dd>
+        </div>
+      </dl>
+      <p className="text-xs text-slate-600">Check the highlighted fields below. Nothing is saved until you add the expense.</p>
       {notes.length > 0 && (
         <ul className="list-disc pl-5 text-xs text-slate-600">
           {notes.map((n) => (
@@ -93,33 +117,54 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
   const [form, setForm] = useState(() => initialState(group, currentUser, expense, aiDraft))
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [aiFields, setAiFields] = useState(() => new Set(aiDraft ? AI_FIELDS : []))
 
-  const set = (patch) => setForm((f) => ({ ...f, ...patch }))
-  const setIn = (key, id, value) => setForm((f) => ({ ...f, [key]: { ...f[key], [id]: value } }))
+  // Editing a field means the user has checked it, so it stops being marked as AI-filled.
+  const touch = (key) => {
+    const field = SPLIT_FIELDS.includes(key) ? 'split' : key
+    setAiFields((s) => (s.has(field) ? new Set([...s].filter((f) => f !== field)) : s))
+  }
+  const set = (patch) => {
+    Object.keys(patch).forEach(touch)
+    setForm((f) => ({ ...f, ...patch }))
+  }
+  const setIn = (key, id, value) => {
+    touch(key)
+    setForm((f) => ({ ...f, [key]: { ...f[key], [id]: value } }))
+  }
+  const fromAi = (field) => aiFields.has(field)
 
   const amountPaise = toPaise(form.amount)
   const participants = group.members.filter((m) => form.selected[m.id])
 
-  // Live check that the split adds up before we hit the API.
+  // Live check that the split adds up before we hit the API. `state` drives the colour:
+  // 'incomplete' (nothing wrong yet, just unfinished) stays neutral; only a real mismatch warns.
   const summary = useMemo(() => {
-    if (!participants.length) return { ok: false, text: 'Pick at least one person' }
-    if (!(amountPaise > 0)) return { ok: false, text: 'Enter an amount' }
+    if (!participants.length) return { ok: false, state: 'mismatch', text: 'Choose at least one person to share this expense' }
+    if (!(amountPaise > 0)) return { ok: false, state: 'incomplete', text: 'Enter the amount to see how it splits' }
     if (form.splitType === 'equal') {
-      return { ok: true, text: `${formatINR(Math.floor(amountPaise / participants.length))} per person` }
+      // Leftover paise go one each to some people, so say so rather than claim an exact "each".
+      const each = formatINR(Math.floor(amountPaise / participants.length))
+      const extra = amountPaise % participants.length
+      const text = extra
+        ? `${each} each; ${extra} ${extra === 1 ? 'person pays' : 'people pay'} ₹0.01 more so it adds up`
+        : `${each} each`
+      return { ok: true, state: 'ok', text }
     }
     if (form.splitType === 'exact') {
       const total = participants.reduce((t, m) => t + (toPaise(form.exact[m.id] ?? '') || 0), 0)
       const left = amountPaise - total
       return left === 0
-        ? { ok: true, text: 'Amounts add up ✓' }
-        : { ok: false, text: `${formatINR(Math.abs(left))} ${left > 0 ? 'left to assign' : 'over the total'}` }
+        ? { ok: true, state: 'ok', text: `Amounts add up to ${formatINR(amountPaise)}` }
+        : { ok: false, state: 'mismatch', text: `${formatINR(Math.abs(left))} ${left > 0 ? 'still to assign' : 'more than the total'}` }
     }
     const total = participants.reduce((t, m) => t + (Number(form.percent[m.id]) || 0), 0)
     const left = Math.round((100 - total) * 100) / 100
     return Math.abs(left) <= 0.01
-      ? { ok: true, text: 'Percentages add up to 100% ✓' }
-      : { ok: false, text: `${Math.abs(left)}% ${left > 0 ? 'left to assign' : 'over 100%'}` }
+      ? { ok: true, state: 'ok', text: 'Percentages add up to 100%' }
+      : { ok: false, state: 'mismatch', text: `${Math.abs(left)}% ${left > 0 ? 'still to assign' : 'more than 100%'}` }
   }, [participants, amountPaise, form.splitType, form.exact, form.percent])
+  const summaryColor = { ok: 'text-emerald-700', incomplete: 'text-slate-500', mismatch: 'text-amber-700' }[summary.state]
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -153,12 +198,14 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
     }
   }
 
-  const selectClass =
-    'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100'
+  const selectClass = (field) =>
+    `w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 ${
+      fromAi(field) ? 'border-brand-500/50 bg-brand-50' : 'border-slate-300 bg-white'
+    }`
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {aiDraft && <AiNotice aiDraft={aiDraft} />}
+      {aiDraft && <AiNotice aiDraft={aiDraft} group={group} currentUser={currentUser} />}
       <Alert>{error}</Alert>
 
       <Input
@@ -167,6 +214,7 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
         placeholder="e.g. Dinner at Fisherman's Wharf"
         value={form.description}
         onChange={(e) => set({ description: e.target.value })}
+        highlight={fromAi('description')}
         required
         maxLength={120}
       />
@@ -179,15 +227,25 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
           placeholder="0.00"
           value={form.amount}
           onChange={(e) => set({ amount: e.target.value })}
+          highlight={fromAi('amount')}
           required
         />
-        <Input id="date" label="Date" type="date" value={form.date} max={today()} onChange={(e) => set({ date: e.target.value })} required />
+        <Input
+          id="date"
+          label="Date"
+          type="date"
+          value={form.date}
+          max={today()}
+          onChange={(e) => set({ date: e.target.value })}
+          highlight={fromAi('date')}
+          required
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <label className="block">
           <span className="mb-1 block text-sm font-medium text-slate-700">Paid by</span>
-          <select className={selectClass} value={form.paidBy} onChange={(e) => set({ paidBy: e.target.value })}>
+          <select className={selectClass('paidBy')} value={form.paidBy} onChange={(e) => set({ paidBy: e.target.value })}>
             {group.members.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.id === currentUser.id ? 'You' : m.name}
@@ -197,7 +255,7 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
         </label>
         <label className="block">
           <span className="mb-1 block text-sm font-medium text-slate-700">Category</span>
-          <select className={selectClass} value={form.category} onChange={(e) => set({ category: e.target.value })}>
+          <select className={selectClass('category')} value={form.category} onChange={(e) => set({ category: e.target.value })}>
             {CATEGORIES.map((c) => (
               <option key={c.value} value={c.value}>
                 {c.icon} {c.label}
@@ -214,6 +272,7 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
             <button
               type="button"
               key={t.value}
+              aria-pressed={form.splitType === t.value}
               onClick={() => set({ splitType: t.value })}
               className={`rounded-md px-2 py-1.5 text-xs font-medium sm:text-sm ${
                 form.splitType === t.value ? 'bg-white text-brand-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'
@@ -224,7 +283,9 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
           ))}
         </div>
 
-        <ul className="divide-y divide-slate-100 rounded-lg border border-slate-200">
+        <ul
+          className={`divide-y divide-slate-100 rounded-lg border ${fromAi('split') ? 'border-brand-500/50 bg-brand-50' : 'border-slate-200'}`}
+        >
           {group.members.map((m) => (
             <li key={m.id} className="flex items-center gap-3 px-3 py-2">
               <input
@@ -265,7 +326,9 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
             </li>
           ))}
         </ul>
-        <p className={`mt-2 text-sm ${summary.ok ? 'text-emerald-600' : 'text-amber-600'}`}>{summary.text}</p>
+        <p aria-live="polite" className={`mt-2 text-sm ${summaryColor}`}>
+          {summary.text}
+        </p>
       </fieldset>
 
       <div className="flex justify-end gap-2 pt-2">

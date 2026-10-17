@@ -12,13 +12,16 @@ export function Button({ variant = 'primary', className = '', ...props }) {
   )
 }
 
-export function Input({ label, id, error, ...props }) {
+// `highlight` marks a value the user should check (e.g. one filled in by AI).
+export function Input({ label, id, error, highlight = false, ...props }) {
   return (
     <label htmlFor={id} className="block">
       <span className="mb-1 block text-sm font-medium text-slate-700">{label}</span>
       <input
         id={id}
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+        className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 ${
+          highlight ? 'border-brand-500/50 bg-brand-50' : 'border-slate-300 bg-white'
+        }`}
         {...props}
       />
       {error && <span className="mt-1 block text-xs text-red-600">{error}</span>}

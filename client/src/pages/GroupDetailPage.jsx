@@ -214,7 +214,7 @@ export default function GroupDetailPage() {
       )}
 
       {editor && (
-        <Modal title={editor.expense ? 'Edit expense' : editor.aiDraft ? 'Review AI expense' : 'Add expense'} onClose={closeEditor}>
+        <Modal title={editor.expense ? 'Edit expense' : editor.aiDraft ? 'Check the AI draft' : 'Add expense'} onClose={closeEditor}>
           <ExpenseForm
             group={group}
             currentUser={currentUser}
