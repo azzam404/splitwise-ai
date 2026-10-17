@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { ChartPie } from 'lucide-react'
 import api, { errorMessage } from '../api/client'
 import { Alert, Button, Card, Spinner } from '../components/ui'
 import MonthPicker from '../components/MonthPicker'
@@ -7,7 +8,7 @@ import { CATEGORIES } from '../utils/categories'
 import { formatINR, toPaise, toRupeeString } from '../utils/money'
 import { monthLabel, shiftMonth, thisMonth } from '../utils/months'
 
-const ROWS = [{ value: 'overall', label: 'Overall (all categories)', icon: '📊' }, ...CATEGORIES]
+const ROWS = [{ value: 'overall', label: 'Overall (all categories)', icon: ChartPie }, ...CATEGORIES]
 
 function BudgetRow({ row, budget, onSave, onRemove }) {
   const [draft, setDraft] = useState(budget ? toRupeeString(budget.limit) : '')
@@ -27,8 +28,9 @@ function BudgetRow({ row, budget, onSave, onRemove }) {
   return (
     <li className="py-3">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="min-w-0 flex-1 text-sm font-medium">
-          <span aria-hidden="true">{row.icon}</span> {row.label}
+        <span className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium">
+          <row.icon className="h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.75} aria-hidden="true" />
+          {row.label}
         </span>
         <form
           className="flex items-center gap-2"

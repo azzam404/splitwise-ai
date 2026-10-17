@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import api, { errorMessage } from '../api/client'
 import { useAuthStore } from '../store/authStore'
 import { Alert, Button, Card, Spinner } from '../components/ui'
@@ -104,8 +105,9 @@ export default function GroupDetailPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <Link to="/groups" className="text-sm text-brand-600 hover:underline">
-            ← All groups
+          <Link to="/groups" className="inline-flex items-center gap-1 text-sm text-brand-600 hover:underline">
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            All groups
           </Link>
           <h1 className="mt-2 text-2xl font-bold">{group.name}</h1>
           {group.description && <p className="text-slate-600">{group.description}</p>}

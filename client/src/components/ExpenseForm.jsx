@@ -258,7 +258,7 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
           <select className={selectClass('category')} value={form.category} onChange={(e) => set({ category: e.target.value })}>
             {CATEGORIES.map((c) => (
               <option key={c.value} value={c.value}>
-                {c.icon} {c.label}
+                {c.label}
               </option>
             ))}
           </select>

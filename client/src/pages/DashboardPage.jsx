@@ -63,7 +63,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Hi {user?.name.split(' ')[0]} 👋</h1>
+          <h1 className="text-2xl font-bold">Hi {user?.name.split(' ')[0]}</h1>
           <p className="text-sm text-slate-500">Your share of spending across all groups.</p>
         </div>
         <MonthPicker value={month} onChange={setMonth} />
@@ -145,9 +145,7 @@ export default function DashboardPage() {
                 <ul className="space-y-4">
                   {data.budgets.map((b) => (
                     <li key={b._id}>
-                      <div className="mb-1 text-sm font-medium">
-                        {b.category === 'overall' ? 'Overall' : `${categoryMeta(b.category).icon} ${categoryMeta(b.category).label}`}
-                      </div>
+                      <div className="mb-1 text-sm font-medium">{b.category === 'overall' ? 'Overall' : categoryMeta(b.category).label}</div>
                       <BudgetProgress budget={b} />
                     </li>
                   ))}
@@ -158,7 +156,7 @@ export default function DashboardPage() {
             <Card>
               <h2 className="mb-3 font-semibold">Group balances</h2>
               {data.balances.groups.length === 0 ? (
-                <p className="text-sm text-slate-500">You're settled up everywhere 🎉</p>
+                <p className="text-sm text-slate-500">You're settled up in every group.</p>
               ) : (
                 <ul className="space-y-2">
                   {data.balances.groups.map(({ group, net }) => (
@@ -185,23 +183,26 @@ export default function DashboardPage() {
               </p>
             ) : (
               <ul className="divide-y divide-slate-100">
-                {data.recentExpenses.map((e) => (
-                  <li key={e._id} className="flex items-center gap-3 py-2 text-sm">
-                    <span aria-hidden="true" className="text-lg">
-                      {categoryMeta(e.category).icon}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate font-medium">{e.description}</div>
-                      <div className="text-xs text-slate-500">
-                        {e.group?.name} · {new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                {data.recentExpenses.map((e) => {
+                  const Icon = categoryMeta(e.category).icon
+                  return (
+                    <li key={e._id} className="flex items-center gap-3 py-2 text-sm">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600" title={categoryMeta(e.category).label}>
+                        <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-medium">{e.description}</div>
+                        <div className="text-xs text-slate-500">
+                          {e.group?.name} · {new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-medium tabular-nums">{formatINR(e.yourShare)}</div>
-                      <div className="text-xs text-slate-500">of {formatINR(e.amount)}</div>
-                    </div>
-                  </li>
-                ))}
+                      <div className="text-right">
+                        <div className="font-medium tabular-nums">{formatINR(e.yourShare)}</div>
+                        <div className="text-xs text-slate-500">of {formatINR(e.amount)}</div>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </Card>

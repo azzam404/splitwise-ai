@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ArrowRight } from 'lucide-react'
 import api, { errorMessage } from '../api/client'
 import { toPaise, toRupeeString } from '../utils/money'
 import { Alert, Button, Input } from './ui'
@@ -53,9 +54,7 @@ export default function SettleUpForm({ group, currentUser, prefill, onSaved, onC
             ))}
           </select>
         </label>
-        <span className="pb-2 text-slate-500" aria-hidden="true">
-          →
-        </span>
+        <ArrowRight className="mb-2.5 h-4 w-4 text-slate-500" aria-hidden="true" />
         <label className="block">
           <span className="mb-1 block text-sm font-medium text-slate-700">Paid to</span>
           <select className={selectClass} value={form.to} onChange={(e) => set({ to: e.target.value })}>

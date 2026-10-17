@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CircleCheck, Info, TriangleAlert } from 'lucide-react'
 import api, { errorMessage } from '../api/client'
 import { useAiStore } from '../store/aiStore'
 import { monthLabel } from '../utils/months'
@@ -6,9 +7,9 @@ import { Alert, Button, Card } from './ui'
 
 // Tone is shown with an icon and a word, never colour alone.
 const TONES = {
-  positive: { icon: '✓', label: 'Good news', badge: 'bg-emerald-100 text-emerald-800' },
-  neutral: { icon: 'i', label: 'Note', badge: 'bg-slate-100 text-slate-700' },
-  warning: { icon: '!', label: 'Watch out', badge: 'bg-amber-100 text-amber-900' },
+  positive: { icon: CircleCheck, label: 'Good news', badge: 'bg-emerald-100 text-emerald-800' },
+  neutral: { icon: Info, label: 'Note', badge: 'bg-slate-100 text-slate-700' },
+  warning: { icon: TriangleAlert, label: 'Watch out', badge: 'bg-amber-100 text-amber-900' },
 }
 
 // Insights are generated on request (not on every page load) to keep API usage low.
@@ -41,7 +42,7 @@ export default function AiInsights({ month }) {
   return (
     <Card>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-semibold">✨ AI insights for {monthLabel(month)}</h2>
+        <h2 className="font-semibold">AI insights for {monthLabel(month)}</h2>
         <Button variant={insights ? 'ghost' : 'primary'} onClick={generate} disabled={loading} className="!py-1.5">
           {loading ? 'Thinking…' : insights ? 'Refresh' : 'Get insights'}
         </Button>
@@ -57,7 +58,7 @@ export default function AiInsights({ month }) {
             return (
               <li key={ins.title} className="rounded-lg border border-slate-200 p-3">
                 <span className={`mb-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${tone.badge}`}>
-                  <span aria-hidden="true">{tone.icon}</span> {tone.label}
+                  <tone.icon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" /> {tone.label}
                 </span>
                 <div className="font-medium">{ins.title}</div>
                 <p className="text-sm text-slate-600">{ins.detail}</p>

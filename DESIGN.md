@@ -170,7 +170,7 @@ A cool, restrained palette: one confident blue on slate, with green, amber, red 
 
 ### Tertiary (semantic only)
 - **Status Good / Warning / Critical** (`status-good`, `status-warning`, `status-critical`): budget health
-  only. Used for budget progress bars and the round status icons. The matching label text is darker:
+  only. Used for budget progress bars only. The status label and its icon use the darker
   emerald-700, amber-700 and red-700.
 - **Owed Green** (`owed-green`, bar `owed-green-bar`): money coming back to someone ("gets back",
   "You are owed", recorded payments).
@@ -200,7 +200,7 @@ vocabularies. Owing money is not an error, so balances never use the critical re
 emerald/amber/red-700). The brighter bar shades fail 4.5:1 as text and live only in bars and dots. Muted text never
 goes lighter than Muted Slate; placeholders use it too.
 
-**The Never Colour Alone Rule.** A status colour always comes with an icon (✓, !, ✕) and a text label ("On track",
+**The Never Colour Alone Rule.** A status colour always comes with an icon (circle-check, triangle-alert, circle-x) and a text label ("On track",
 "Close to limit", "Over budget"). Money direction always comes with words ("gets back", "owes").
 
 ## Typography
@@ -264,7 +264,7 @@ card. Hover changes the fill colour instead.
 Gently rounded, never pill-shaped except where a shape means "measure" or "tag". Controls, list rows and
 alerts use 8px. Cards use 12px. Modals use 16px, and on phones only the top corners are rounded so the sheet
 sits on the bottom edge. Nav links and small icon buttons use 6px. Fully rounded shapes are kept for progress
-tracks and their fills, the savings pill and status-icon dots. Chart bars round only their outer end: 4px on
+tracks and their fills, the savings pill and member avatars. Chart bars round only their outer end: 4px on
 the top of vertical bars, and the right end of horizontal ones.
 
 ## Components
@@ -303,6 +303,15 @@ A white header with a hairline bottom border. The "SplitWise" wordmark is 18px b
 The active link is Ledger Blue Deep text on Ledger Blue Wash. On phones the nav wraps to its own full-width
 row.
 
+### Icons
+- **Library:** lucide-react only, line icons. Never emoji or Unicode glyphs.
+- **Stroke:** 1.75 for content icons (categories, activity, close), 2 for small status icons next to 12px labels.
+- **Size:** 16px inline with text, 20px inside 40px category tiles and the modal close button.
+- **Colour:** Secondary Slate in neutral tiles (slate-100 fill); a status icon takes its label's 700 shade.
+- **Accessibility:** always `aria-hidden`; the adjacent text or the control's `aria-label` carries the meaning.
+- **Category set:** Utensils, ShoppingCart, Plane, CarTaxiFront, House, Lightbulb, Clapperboard, ShoppingBag, Pill,
+  Receipt (`client/src/utils/categories.js`). Category select options are text only.
+
 ### Modal / Bottom Sheet
 A white sheet, at most 512px wide and 92vh tall, that scrolls internally. On phones it is pinned to the
 bottom with 16px top corners. From 640px up it is centred with 16px corners all round. The title is 18px
@@ -320,7 +329,7 @@ payments" card. It is the product's main claim, shown as a quiet fact. It never 
 
 ### Budget Progress (signature)
 An 8px status-coloured bar on a Track Slate track, with `role="progressbar"`. Underneath, a 12px line reads
-"₹spent of ₹limit · %", followed by the status badge (a 16px round icon dot plus a label) and "₹X left" or
+"₹spent of ₹limit · %", followed by the status badge (a 16px status icon in the label colour, plus the label) and "₹X left" or
 "₹X over".
 
 ### AI Quick-Add Panel (the expense composer)
@@ -343,8 +352,7 @@ is disabled, a dashed-border row explains why and carries a primary "Add expense
   content block.
 
 ### Don't:
-- **Don't** use emoji as UI: no 👋 in greetings, 🎉 in empty states or ✨ on the AI insights heading. Use words,
-  or an SVG icon if one is really needed.
+- **Don't** use emoji or Unicode glyphs (✓ ✕ → ←) as UI. Use words, or a lucide icon if one is really needed.
 - **Don't** add a second brand hue (purple for AI, teal for groups and so on). AI surfaces use Ledger Blue Wash.
 - **Don't** use gradients, glassmorphism, neon or glow effects. Every fill is a solid colour.
 - **Don't** colour a debt in critical red. Owing money is Owes Orange, not an error.

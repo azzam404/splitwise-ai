@@ -19,8 +19,9 @@ export function CategoryBars({ data }) {
         const meta = categoryMeta(d.category)
         return (
           <li key={d.category} className="grid grid-cols-[7.5rem_1fr_auto] items-center gap-3 text-sm" title={`${meta.label}: ${formatINR(d.amount)}`}>
-            <span className="truncate text-slate-700">
-              <span aria-hidden="true">{meta.icon}</span> {meta.label}
+            <span className="flex min-w-0 items-center gap-1.5 text-slate-700">
+              <meta.icon className="h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.75} aria-hidden="true" />
+              <span className="truncate">{meta.label}</span>
             </span>
             <span className="h-3 rounded-r bg-slate-50">
               <span className="block h-3 rounded-r bg-series-1" style={{ width: `${Math.max(2, (d.amount / max) * 100)}%` }} />

@@ -1,19 +1,19 @@
+import { CircleCheck, CircleX, TriangleAlert } from 'lucide-react'
 import { formatINR } from '../utils/money'
 
-// Status is never colour alone: each state has an icon and a text label too.
+// Status is never colour alone: each state has an icon and a text label too. The icon takes the
+// label's 700 shade, not the bar colour, because the bright bar colours fail 3:1 on white.
 const STATUS = {
-  ok: { icon: '✓', label: 'On track', bar: 'bg-status-good', text: 'text-emerald-700' },
-  warning: { icon: '!', label: 'Close to limit', bar: 'bg-status-warning', text: 'text-amber-700' },
-  over: { icon: '✕', label: 'Over budget', bar: 'bg-status-critical', text: 'text-red-700' },
+  ok: { icon: CircleCheck, label: 'On track', bar: 'bg-status-good', text: 'text-emerald-700' },
+  warning: { icon: TriangleAlert, label: 'Close to limit', bar: 'bg-status-warning', text: 'text-amber-700' },
+  over: { icon: CircleX, label: 'Over budget', bar: 'bg-status-critical', text: 'text-red-700' },
 }
 
 export function StatusBadge({ status }) {
   const s = STATUS[status]
   return (
     <span className={`inline-flex items-center gap-1 text-xs font-medium ${s.text}`}>
-      <span aria-hidden="true" className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] text-white ${s.bar}`}>
-        {s.icon}
-      </span>
+      <s.icon className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
       {s.label}
     </span>
   )

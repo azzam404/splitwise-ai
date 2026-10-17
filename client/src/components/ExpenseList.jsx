@@ -35,8 +35,8 @@ export default function ExpenseList({ expenses, currentUser, onEdit, onDelete })
               <div className="text-[11px] uppercase text-slate-500">{month}</div>
               <div className="text-lg font-semibold">{day}</div>
             </div>
-            <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xl sm:flex" title={cat.label}>
-              {cat.icon}
+            <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600 sm:flex" title={cat.label}>
+              <cat.icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
               <div className="truncate font-medium">{e.description}</div>

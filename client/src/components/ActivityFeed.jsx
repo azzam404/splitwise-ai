@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Circle, HandCoins, Pencil, Receipt, Trash2, Undo2, UserPlus, Users } from 'lucide-react'
 import api, { errorMessage } from '../api/client'
 import { formatINR } from '../utils/money'
 import { Alert, Button, Card, Spinner } from './ui'
@@ -6,13 +7,13 @@ import { Alert, Button, Card, Spinner } from './ui'
 const PAGE_SIZE = 30
 
 const ICONS = {
-  'group.created': '✨',
-  'member.joined': '👋',
-  'expense.created': '🧾',
-  'expense.updated': '✏️',
-  'expense.deleted': '🗑️',
-  'settlement.created': '💸',
-  'settlement.deleted': '↩️',
+  'group.created': Users,
+  'member.joined': UserPlus,
+  'expense.created': Receipt,
+  'expense.updated': Pencil,
+  'expense.deleted': Trash2,
+  'settlement.created': HandCoins,
+  'settlement.deleted': Undo2,
 }
 
 const AI_SOURCES = { 'ai-text': 'with AI quick add', 'ai-receipt': 'from a scanned receipt' }
@@ -141,10 +142,11 @@ export default function ActivityFeed({ groupId, currentUser, refreshKey }) {
         <ul className="divide-y divide-slate-100">
           {entries.map((entry) => {
             const isYou = entry.actor?.id === currentUser.id
+            const Icon = ICONS[entry.type] || Circle
             return (
               <li key={entry._id} className="flex gap-3 py-3 text-sm">
-                <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100">
-                  {ICONS[entry.type] || '•'}
+                <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+                  <Icon className="h-4 w-4" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
                   <p className="break-words">
