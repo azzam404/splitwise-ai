@@ -12,6 +12,8 @@ import SettleUpForm from '../components/SettleUpForm'
 import AiQuickAdd from '../components/AiQuickAdd'
 import ActivityFeed from '../components/ActivityFeed'
 import GroupSummary from '../components/GroupSummary'
+import UndoToast from '../components/UndoToast'
+import { useUndoableDelete } from '../utils/useUndoableDelete'
 
 const PAGE_SIZE = 20
 const TABS = [
@@ -39,6 +41,7 @@ export default function GroupDetailPage() {
   // Bumped whenever expenses or payments change so balances and activity refetch.
   const [refreshKey, setRefreshKey] = useState(0)
   const bumpBalances = () => setRefreshKey((n) => n + 1)
+  const undoable = useUndoableDelete()
 
   const loadExpenses = useCallback(
     async (pageNumber) => {
@@ -78,15 +81,24 @@ export default function GroupDetailPage() {
     loadExpenses(1).catch((err) => setError(errorMessage(err)))
   }
 
-  async function handleDelete(expense) {
-    if (!window.confirm(`Delete "${expense.description}"?`)) return
-    try {
-      await api.delete(`/expenses/${expense._id}`)
-      setExpenses((prev) => prev.filter((e) => e._id !== expense._id))
-      bumpBalances()
-    } catch (err) {
-      setError(errorMessage(err))
-    }
+  // Hide the expense now; the server delete waits out the undo window.
+  function handleDelete(expense) {
+    setEditor(null)
+    const index = expenses.findIndex((e) => e._id === expense._id)
+    setExpenses((prev) => prev.filter((e) => e._id !== expense._id))
+    undoable.schedule({
+      message: `Deleted “${expense.description}”`,
+      restore: () =>
+        setExpenses((prev) => (prev.some((e) => e._id === expense._id) ? prev : prev.toSpliced(Math.max(0, index), 0, expense))),
+      commit: () =>
+        api
+          .delete(`/expenses/${expense._id}`)
+          .then(bumpBalances)
+          .catch((err) => {
+            setError(errorMessage(err))
+            loadExpenses(1).catch(() => {})
+          }),
+    })
   }
 
   const closeEditor = useCallback(() => setEditor(null), [])
@@ -224,9 +236,12 @@ export default function GroupDetailPage() {
             aiDraft={editor.aiDraft}
             onSaved={handleSaved}
             onCancel={closeEditor}
+            onDelete={editor.expense ? () => handleDelete(editor.expense) : undefined}
           />
         </Modal>
       )}
+
+      <UndoToast pending={undoable.pending} onUndo={undoable.undo} />
     </div>
   )
 }

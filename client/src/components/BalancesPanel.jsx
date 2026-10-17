@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import api, { errorMessage } from '../api/client'
 import { formatINR } from '../utils/money'
 import { Alert, Button, Card, Spinner } from './ui'
+import UndoToast from './UndoToast'
+import { useUndoableDelete } from '../utils/useUndoableDelete'
 
 function MemberBalances({ balances, currentUser }) {
   const max = Math.max(1, ...balances.map((b) => Math.abs(b.net)))
@@ -32,6 +34,7 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
   const [data, setData] = useState(null)
   const [settlements, setSettlements] = useState([])
   const [error, setError] = useState('')
+  const undoable = useUndoableDelete()
 
   useEffect(() => {
     let cancelled = false
@@ -55,15 +58,23 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
     }
   }, [groupId, refreshKey])
 
-  async function deleteSettlement(s) {
-    if (!window.confirm('Delete this payment? Balances will be recalculated.')) return
-    try {
-      await api.delete(`/settlements/${s._id}`)
-      // The page bumps refreshKey, so this panel and the summary above the tabs both reload.
-      onChange()
-    } catch (err) {
-      setError(errorMessage(err))
-    }
+  // Hide the payment now; the server delete waits out the undo window.
+  function deleteSettlement(s) {
+    const index = settlements.findIndex((x) => x._id === s._id)
+    setSettlements((prev) => prev.filter((x) => x._id !== s._id))
+    undoable.schedule({
+      message: `Deleted ${formatINR(s.amount)} payment`,
+      restore: () => setSettlements((prev) => (prev.some((x) => x._id === s._id) ? prev : prev.toSpliced(Math.max(0, index), 0, s))),
+      commit: () =>
+        api
+          .delete(`/settlements/${s._id}`)
+          // The page bumps refreshKey, so this panel and the summary above the tabs both reload.
+          .then(onChange)
+          .catch((err) => {
+            setError(errorMessage(err))
+            onChange()
+          }),
+    })
   }
 
   if (error && !data) return <Alert>{error}</Alert>
@@ -134,7 +145,11 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
                     {s.note && ` · ${s.note}`}
                   </div>
                 </div>
-                <button onClick={() => deleteSettlement(s)} className="shrink-0 rounded-md px-2 py-1 text-xs text-red-600 hover:bg-red-50">
+                <button
+                  onClick={() => deleteSettlement(s)}
+                  className="shrink-0 rounded-md px-3 py-2 text-xs text-red-700 hover:bg-red-50"
+                  aria-label={`Delete payment of ${formatINR(s.amount)} from ${name(s.from)} to ${name(s.to)}`}
+                >
                   Delete
                 </button>
               </li>
@@ -142,6 +157,8 @@ export default function BalancesPanel({ groupId, currentUser, refreshKey, onSett
           </ul>
         )}
       </Card>
+
+      <UndoToast pending={undoable.pending} onUndo={undoable.undo} />
     </div>
   )
 }

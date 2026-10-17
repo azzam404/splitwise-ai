@@ -318,6 +318,17 @@ bottom with 16px top corners. From 640px up it is centred with 16px corners all 
 semibold, with a Muted Slate ✕ close button. Escape and a click on the backdrop both close it, and the page
 behind stops scrolling.
 
+### Undo Toast
+The only confirmation pattern for deletes; the browser's `confirm()` is never used. An Ink-dark (slate-900) bar,
+12px corners, sheet shadow, pinned 16px above the bottom edge and at most 448px wide, so it sits in thumb reach.
+White 14px message ("Deleted “Fuel”") and a Ledger Blue Mist "Undo" text button. The item disappears at once; the
+server delete waits 5 seconds, and starting another delete or leaving the page sends it immediately.
+
+### Settle-up Preview
+Inside the Settle up sheet, a Page Slate panel headed "After this payment" lists the payer and receiver with their
+resulting balance ("settled", "gets back ₹X", "owes ₹X") in the money-direction colours. Unprefilled, the sheet
+starts from the current user's largest suggested payment, never from a direction that would be wrong for them.
+
 ### Balance Bar (signature)
 Each member gets a row: their name on the left, and "gets back ₹X" in Owed Green or "owes ₹X" in Owes Orange
 on the right. Below sits an 8px fully rounded Track Slate bar whose fill length is proportional to the
@@ -356,5 +367,6 @@ is disabled, a dashed-border row explains why and carries a primary "Add expense
 - **Don't** add a second brand hue (purple for AI, teal for groups and so on). AI surfaces use Ledger Blue Wash.
 - **Don't** use gradients, glassmorphism, neon or glow effects. Every fill is a solid colour.
 - **Don't** colour a debt in critical red. Owing money is Owes Orange, not an error.
+- **Don't** use `window.confirm()` for deletes. Delete at once and offer Undo.
 - **Don't** lift cards on hover or give them shadows heavier than `shadow-sm`. Only overlays float.
 - **Don't** use dual axes or several series hues in a chart. Magnitude is shown in Series Blue only.

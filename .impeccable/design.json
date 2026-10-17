@@ -294,6 +294,13 @@
       "description": "Status bar plus icon-and-label badge; never colour alone.",
       "html": "<div class=\"ds-budget\"><div class=\"ds-budget-track\" role=\"progressbar\" aria-valuenow=\"86\" aria-valuemin=\"0\" aria-valuemax=\"100\"><div class=\"ds-budget-fill\" style=\"width:86%\"></div></div><div class=\"ds-budget-meta\"><span>₹4,300.00 of ₹5,000.00 · 86%</span><span class=\"ds-badge\"><svg class=\"ds-badge-icon\" aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>Close to limit</span></div></div>",
       "css": ".ds-budget { font-family: ui-sans-serif, system-ui, sans-serif; } .ds-budget-track { height: 8px; border-radius: 9999px; background: #f1f5f9; } .ds-budget-fill { height: 8px; border-radius: 9999px; background: var(--color-status-warning, #fab219); } .ds-budget-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; margin-top: 4px; font-size: 12px; color: #475569; } .ds-badge { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; color: #b45309; } .ds-badge-icon { width: 16px; height: 16px; }"
+    },
+    {
+      "name": "Undo Toast",
+      "kind": "custom",
+      "description": "The only confirmation pattern for deletes: the item goes at once, Undo restores it for 5 seconds.",
+      "html": "<div class=\"ds-toast\" role=\"status\"><span>Deleted “Fuel”</span><button class=\"ds-toast-undo\" type=\"button\">Undo</button></div>",
+      "css": ".ds-toast { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 448px; background: #0f172a; color: #fff; border-radius: 12px; padding: 8px 8px 8px 16px; font: 400 14px/20px ui-sans-serif, system-ui, sans-serif; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); } .ds-toast-undo { background: transparent; border: none; border-radius: 8px; padding: 8px 12px; color: #d9eaff; font-weight: 600; cursor: pointer; } .ds-toast-undo:hover { background: rgb(255 255 255 / 0.1); } .ds-toast-undo:focus-visible { outline: 2px solid #d9eaff; }"
     }
   ],
   "narrative": {
@@ -356,6 +363,7 @@
       "Don't add a second brand hue (purple for AI, teal for groups and so on). AI surfaces use Ledger Blue Wash.",
       "Don't use gradients, glassmorphism, neon or glow effects. Every fill is a solid colour.",
       "Don't colour a debt in critical red. Owing money is Owes Orange, not an error.",
+      "Don't use window.confirm() for deletes. Delete at once and offer Undo.",
       "Don't lift cards on hover or give them shadows heavier than shadow-sm. Only overlays float.",
       "Don't use dual axes or several series hues in a chart. Magnitude is shown in Series Blue only."
     ]

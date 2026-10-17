@@ -113,7 +113,7 @@ function AiNotice({ aiDraft, group, currentUser }) {
   )
 }
 
-export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSaved, onCancel }) {
+export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSaved, onCancel, onDelete }) {
   const [form, setForm] = useState(() => initialState(group, currentUser, expense, aiDraft))
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -331,13 +331,21 @@ export default function ExpenseForm({ group, currentUser, expense, aiDraft, onSa
         </p>
       </fieldset>
 
-      <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={saving}>
-          {saving ? 'Saving…' : expense ? 'Save changes' : 'Add expense'}
-        </Button>
+      <div className="flex items-center gap-2 pt-2">
+        {onDelete && (
+          // The delete is undoable from the toast, so it needs no confirmation step.
+          <button type="button" onClick={onDelete} className="-ml-2 rounded-lg px-2 py-2 text-sm font-medium text-red-700 hover:bg-red-50">
+            Delete expense
+          </button>
+        )}
+        <div className="ml-auto flex gap-2">
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={saving}>
+            {saving ? 'Saving…' : expense ? 'Save changes' : 'Add expense'}
+          </Button>
+        </div>
       </div>
     </form>
   )
