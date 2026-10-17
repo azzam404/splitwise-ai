@@ -59,14 +59,14 @@
       "refersTo": "button-primary",
       "description": "The one filled action per view.",
       "html": "<button class=\"ds-btn-primary\">Add expense</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--color-brand-600, #1f57d1); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font: 500 14px/20px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-primary:hover { background: var(--color-brand-700, #1a46a8); } .ds-btn-primary:focus-visible { outline: 2px solid #2f6fed; outline-offset: 2px; } .ds-btn-primary:disabled { background: rgb(47 111 237 / 0.6); cursor: not-allowed; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--color-brand-600, #1f57d1); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font: 500 14px/20px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-primary:hover { background: var(--color-brand-700, #1a46a8); } .ds-btn-primary:focus-visible { outline: 2px solid #2f6fed; outline-offset: 2px; } .ds-btn-primary:disabled { background: #e2e8f0; color: #64748b; cursor: not-allowed; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Supporting actions such as Record a payment or Scan receipt.",
-      "html": "<button class=\"ds-btn-secondary\">Record a payment</button>",
+      "description": "Supporting actions such as Settle up or Scan receipt.",
+      "html": "<button class=\"ds-btn-secondary\">Settle up</button>",
       "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #fff; color: #334155; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 16px; font: 500 14px/20px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-secondary:hover { background: #f8fafc; } .ds-btn-secondary:focus-visible { outline: 2px solid #2f6fed; outline-offset: 2px; }"
     },
     {

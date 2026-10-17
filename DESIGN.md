@@ -268,10 +268,10 @@ the top of vertical bars, and the right end of horizontal ones.
 ### Buttons
 Quick and confident: one filled button per view, everything else quieter.
 - **Shape:** gently rounded (8px), 14px medium label, 8px × 16px padding, `gap-2` for an icon.
-- **Primary:** Ledger Blue fill, white text. Hover is Ledger Blue Deep. When disabled, Ledger Blue Bright at
-  60% opacity with a not-allowed cursor.
+- **Primary:** Ledger Blue fill, white text. Hover is Ledger Blue Deep. When disabled, a Hairline Slate fill
+  with Muted Slate text and a not-allowed cursor, so it never reads as a second live primary.
 - **Secondary:** white with a Field Border Slate border and Label Slate text. Hover fills Page Slate. Used for
-  "Record a payment" and "Scan receipt".
+  "Settle up" and "Scan receipt".
 - **Ghost:** no fill, Secondary Slate text. Hover fills Track Slate. Used for "Log out" and inline row actions;
   "Settle" is a ghost button tinted with Ledger Blue Deep.
 - **Transitions:** colours only, 150ms. No movement, no change of scale.
@@ -317,11 +317,12 @@ An 8px status-coloured bar on a Track Slate track, with `role="progressbar"`. Un
 "₹spent of ₹limit · %", followed by the status badge (a 16px round icon dot plus a label) and "₹X left" or
 "₹X over".
 
-### AI Quick-Add Panel
-A Ledger Blue Wash panel (60% opacity) with a Ledger Blue Mist border and 12px corners. It holds the sentence
-input and two buttons: a primary submit and a secondary "Scan receipt". Under them, a 12px Muted Slate line
-says that nothing is saved until the user confirms. When AI is disabled, it is replaced by a dashed-border
-explanation.
+### AI Quick-Add Panel (the expense composer)
+The only way to add an expense on a group page, shown on the Expenses tab only. A Ledger Blue Wash panel (60%
+opacity) with a Ledger Blue Mist border and 12px corners. It holds the sentence input, the page's one primary
+button ("Quick add") and a secondary "Scan receipt". Under them, a 12px Secondary Slate line says that nothing is
+saved until the user confirms, ending in an underlined "add it manually" link that opens the plain form. When AI
+is disabled, a dashed-border row explains why and carries a primary "Add expense" button instead.
 
 ## Do's and Don'ts
 

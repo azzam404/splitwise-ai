@@ -110,12 +110,9 @@ export default function GroupDetailPage() {
           <h1 className="mt-2 text-2xl font-bold">{group.name}</h1>
           {group.description && <p className="text-slate-600">{group.description}</p>}
         </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setSettling({ prefill: null })}>
-            Settle up
-          </Button>
-          <Button onClick={() => setEditor({})}>+ Add expense</Button>
-        </div>
+        <Button variant="secondary" onClick={() => setSettling({ prefill: null })}>
+          Settle up
+        </Button>
       </div>
 
       <Alert>{error}</Alert>
@@ -155,10 +152,9 @@ export default function GroupDetailPage() {
         />
       ) : (
         <div className="space-y-4">
-          <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} />
+          <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} onManual={() => setEditor({})} />
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card className="md:col-span-2">
-              <h2 className="mb-2 font-semibold">Expenses</h2>
               <ExpenseList
                 expenses={expenses}
                 currentUser={currentUser}
@@ -206,7 +202,7 @@ export default function GroupDetailPage() {
       )}
 
       {settling && (
-        <Modal title="Record a payment" onClose={closeSettling}>
+        <Modal title="Settle up" onClose={closeSettling}>
           <SettleUpForm
             group={group}
             currentUser={currentUser}
