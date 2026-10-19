@@ -316,7 +316,8 @@ row.
 A white sheet, at most 512px wide and 92vh tall, that scrolls internally. On phones it is pinned to the
 bottom with 16px top corners. From 640px up it is centred with 16px corners all round. The title is 18px
 semibold, with a Muted Slate ✕ close button. Escape and a click on the backdrop both close it, and the page
-behind stops scrolling.
+behind stops scrolling. Opening it focuses the dialog (labelled by its title), Tab stays inside it,
+and closing returns focus to whatever opened it.
 
 ### Undo Toast
 The only confirmation pattern for deletes; the browser's `confirm()` is never used. An Ink-dark (slate-900) bar,

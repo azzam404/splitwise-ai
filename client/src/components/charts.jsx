@@ -51,23 +51,23 @@ export function TrendChart({ data }) {
     <div className="h-56" role="img" aria-label={`Monthly spending: ${data.map((d) => `${monthLabel(d.month, 'short')} ${formatINR(d.amount)}`).join(', ')}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
-          <CartesianGrid vertical={false} stroke="#eef0f3" />
+          <CartesianGrid vertical={false} stroke="var(--color-slate-100)" />
           <XAxis
             dataKey="month"
             tickFormatter={(m) => monthLabel(m, 'short')}
             tickLine={false}
-            axisLine={{ stroke: '#cbd5e1' }}
-            tick={{ fill: '#64748b', fontSize: 12 }}
+            axisLine={{ stroke: 'var(--color-slate-300)' }}
+            tick={{ fill: 'var(--color-slate-500)', fontSize: 12 }}
           />
           <YAxis
             tickFormatter={compactINR}
             tickLine={false}
             axisLine={false}
             width={56}
-            tick={{ fill: '#64748b', fontSize: 12 }}
+            tick={{ fill: 'var(--color-slate-500)', fontSize: 12 }}
             allowDecimals={false}
           />
-          <Tooltip content={<TrendTooltip />} cursor={{ fill: '#f1f5f9' }} />
+          <Tooltip content={<TrendTooltip />} cursor={{ fill: 'var(--color-slate-100)' }} />
           <Bar dataKey="amount" fill="var(--color-series-1)" radius={[4, 4, 0, 0]} maxBarSize={36} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
