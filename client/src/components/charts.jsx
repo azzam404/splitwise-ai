@@ -18,7 +18,7 @@ export function CategoryBars({ data }) {
       {data.map((d) => {
         const meta = categoryMeta(d.category)
         return (
-          <li key={d.category} className="grid grid-cols-[7.5rem_1fr_auto] items-center gap-3 text-sm" title={`${meta.label}: ${formatINR(d.amount)}`}>
+          <li key={d.category} className="grid grid-cols-[minmax(0,7.5rem)_minmax(2rem,1fr)_auto] items-center gap-3 text-sm" title={`${meta.label}: ${formatINR(d.amount)}`}>
             <span className="flex min-w-0 items-center gap-1.5 text-slate-700">
               <meta.icon className="h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.75} aria-hidden="true" />
               <span className="truncate">{meta.label}</span>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { TrendingDown, TrendingUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api, { errorMessage } from '../api/client'
 import { useAuthStore } from '../store/authStore'
@@ -25,9 +26,10 @@ function ChangeVsLastMonth({ current, previous }) {
   if (!previous) return <>No spending last month</>
   const change = Math.round(((current - previous) / previous) * 100)
   if (change === 0) return <>Same as last month</>
+  const trendIcon = { className: 'inline h-3.5 w-3.5 align-[-2px]', strokeWidth: 2, 'aria-hidden': true }
   return (
     <>
-      <span aria-hidden="true">{change > 0 ? '▲' : '▼'}</span> {Math.abs(change)}% {change > 0 ? 'more' : 'less'} than last month
+      {change > 0 ? <TrendingUp {...trendIcon} /> : <TrendingDown {...trendIcon} />} {Math.abs(change)}% {change > 0 ? 'more' : 'less'} than last month
     </>
   )
 }
@@ -91,7 +93,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {/* Tile width is in rem, so enlarged text drops to fewer columns instead of spilling the amounts. */}
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
             <StatTile label={`Spent in ${monthLabel(month, 'short')}`} value={formatINR(data.totalSpent)}>
               <ChangeVsLastMonth current={data.totalSpent} previous={data.previousMonthSpent} />
             </StatTile>
@@ -129,7 +132,7 @@ export default function DashboardPage() {
             <Card className="lg:col-span-2">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="font-semibold">Budgets</h2>
-                <Link to="/budgets" className="text-sm text-brand-600 hover:underline">
+                <Link to="/budgets" className="-my-1 py-1 text-sm text-brand-600 hover:underline">
                   Manage
                 </Link>
               </div>

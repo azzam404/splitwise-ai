@@ -22,7 +22,7 @@ export default function Layout() {
           <Link to="/dashboard" className="order-1 shrink-0 text-lg font-bold text-brand-700">
             SplitWise <span className="text-slate-800">AI</span>
           </Link>
-          <nav className="order-3 -mx-3 flex w-full gap-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1">
+          <nav className="order-3 -mx-3 flex w-full flex-wrap gap-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1">
             <NavLink to="/dashboard" className={navClass}>
               Dashboard
             </NavLink>

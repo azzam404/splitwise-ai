@@ -35,7 +35,7 @@ function BudgetRow({ row, budget, onSave, onRemove }) {
           <span className="min-w-0">{row.label}</span>
         </span>
         <form
-          className="flex items-center gap-2"
+          className="flex flex-wrap items-center gap-2"
           onSubmit={(e) => {
             e.preventDefault()
             if (changed && valid) run(() => onSave(row.value, toPaise(draft)))
@@ -59,7 +59,7 @@ function BudgetRow({ row, budget, onSave, onRemove }) {
             Save
           </Button>
           {budget && (
-            <Button type="button" variant="ghost" className="!px-2 !py-1.5 text-red-600" disabled={busy} onClick={() => run(() => onRemove(budget))}>
+            <Button type="button" variant="ghost" className="!px-2 !py-1.5 !text-red-700 hover:!bg-red-50" disabled={busy} onClick={() => run(() => onRemove(budget))}>
               Remove
             </Button>
           )}
