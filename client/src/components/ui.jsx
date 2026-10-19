@@ -44,8 +44,9 @@ export function Alert({ children }) {
 
 export function Spinner() {
   return (
-    <div className="flex justify-center py-12" aria-label="Loading">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-100 border-t-brand-600" />
+    <div className="flex justify-center py-12" role="status">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-100 border-t-brand-600 motion-reduce:animate-[spin_3s_linear_infinite]" aria-hidden="true" />
+      <span className="sr-only">Loading…</span>
     </div>
   )
 }

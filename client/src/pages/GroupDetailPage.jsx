@@ -101,6 +101,17 @@ export default function GroupDetailPage() {
     })
   }
 
+  // Arrow keys, Home and End move between tabs (WAI-ARIA tabs pattern, automatic activation).
+  function handleTabKey(e) {
+    const i = TABS.findIndex((t) => t.value === tab)
+    const next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: TABS.length - 1 }[e.key]
+    if (next === undefined) return
+    e.preventDefault()
+    const target = TABS[(next + TABS.length) % TABS.length].value
+    setTab(target)
+    document.getElementById(`tab-${target}`)?.focus()
+  }
+
   const closeEditor = useCallback(() => setEditor(null), [])
   const closeSettling = useCallback(() => setSettling(null), [])
 
@@ -138,13 +149,18 @@ export default function GroupDetailPage() {
         onShowPayments={tab === 'balances' ? null : () => setTab('balances')}
       />
 
-      <div role="tablist" className="flex gap-1 border-b border-slate-200">
+      <div role="tablist" aria-label="Group sections" className="flex gap-1 border-b border-slate-200">
         {TABS.map((t) => (
           <button
             key={t.value}
+            id={`tab-${t.value}`}
             role="tab"
             aria-selected={tab === t.value}
+            aria-controls={tab === t.value ? `panel-${t.value}` : undefined}
+            // Roving tabindex: Tab enters the tab list once, arrow keys move within it.
+            tabIndex={tab === t.value ? 0 : -1}
             onClick={() => setTab(t.value)}
+            onKeyDown={handleTabKey}
             className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium ${
               tab === t.value ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
@@ -154,66 +170,71 @@ export default function GroupDetailPage() {
         ))}
       </div>
 
-      {tab === 'activity' ? (
-        <ActivityFeed groupId={group._id} currentUser={currentUser} refreshKey={refreshKey} />
-      ) : tab === 'balances' ? (
-        <BalancesPanel
-          groupId={group._id}
-          currentUser={currentUser}
-          refreshKey={refreshKey}
-          onSettle={(prefill) => setSettling({ prefill })}
-          onChange={bumpBalances}
-        />
-      ) : (
-        <div className="space-y-4">
-          <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} onManual={() => setEditor({})} />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <Card className="md:col-span-2">
-              <ExpenseList
-                expenses={expenses}
-                currentUser={currentUser}
-                onEdit={(expense) => setEditor({ expense })}
-                onDelete={handleDelete}
-              />
-              {page.current < page.pages && (
-                <div className="pt-3 text-center">
-                  <Button variant="secondary" onClick={() => loadExpenses(page.current + 1).catch((err) => setError(errorMessage(err)))}>
-                    Load more
-                  </Button>
-                </div>
-              )}
-            </Card>
+      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {tab === 'activity' ? (
+          <ActivityFeed groupId={group._id} currentUser={currentUser} refreshKey={refreshKey} />
+        ) : tab === 'balances' ? (
+          <BalancesPanel
+            groupId={group._id}
+            currentUser={currentUser}
+            refreshKey={refreshKey}
+            onSettle={(prefill) => setSettling({ prefill })}
+            onChange={bumpBalances}
+          />
+        ) : (
+          <div className="space-y-4">
+            <AiQuickAdd group={group} onDraft={(aiDraft) => setEditor({ aiDraft })} onManual={() => setEditor({})} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <Card className="md:col-span-2">
+                <ExpenseList
+                  expenses={expenses}
+                  currentUser={currentUser}
+                  onEdit={(expense) => setEditor({ expense })}
+                  onDelete={handleDelete}
+                />
+                {page.current < page.pages && (
+                  <div className="pt-3 text-center">
+                    <Button variant="secondary" onClick={() => loadExpenses(page.current + 1).catch((err) => setError(errorMessage(err)))}>
+                      Load more
+                    </Button>
+                  </div>
+                )}
+              </Card>
 
-            <div className="space-y-4">
-              <Card>
-                <h2 className="mb-2 font-semibold">Invite friends</h2>
-                <div className="flex items-center justify-between gap-2 rounded-lg bg-slate-100 px-3 py-2">
-                  <code className="font-mono text-lg tracking-widest">{group.inviteCode}</code>
-                  <Button variant="secondary" onClick={copyCode}>
-                    {copied ? 'Copied!' : 'Copy'}
-                  </Button>
-                </div>
-              </Card>
-              <Card>
-                <h2 className="mb-2 font-semibold">Members ({group.members.length})</h2>
-                <ul className="space-y-2">
-                  {group.members.map((m) => (
-                    <li key={m.id} className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
-                        {m.name[0]?.toUpperCase()}
-                      </span>
-                      <div className="text-sm">
-                        <div className="font-medium">{m.name}</div>
-                        <div className="text-slate-500">{m.email}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
+              <div className="space-y-4">
+                <Card>
+                  <h2 className="mb-2 font-semibold">Invite friends</h2>
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-slate-100 px-3 py-2">
+                    <code className="font-mono text-lg tracking-widest">{group.inviteCode}</code>
+                    <Button variant="secondary" onClick={copyCode}>
+                      {copied ? 'Copied' : 'Copy'}
+                    </Button>
+                    <span className="sr-only" aria-live="polite">
+                      {copied ? 'Invite code copied' : ''}
+                    </span>
+                  </div>
+                </Card>
+                <Card>
+                  <h2 className="mb-2 font-semibold">Members ({group.members.length})</h2>
+                  <ul className="space-y-2">
+                    {group.members.map((m) => (
+                      <li key={m.id} className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
+                          {m.name[0]?.toUpperCase()}
+                        </span>
+                        <div className="text-sm">
+                          <div className="font-medium">{m.name}</div>
+                          <div className="text-slate-500">{m.email}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {settling && (
         <Modal title="Settle up" onClose={closeSettling}>
